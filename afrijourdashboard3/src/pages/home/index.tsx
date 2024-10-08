@@ -65,29 +65,7 @@ export default function Home() {
     return `${baseUrl}?${queryParams}${query}${page}${pageSizeParam}`;
   };
 
-  // Function to call the description API
-
-  // const fetchDescription = async (journalText, index) => {
-  //   try {
-  //     const response = await fetch('https://aphrc.site/journal_api/generate-description/', {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json'
-  //       },
-  //       body: JSON.stringify({
-  //         journal_text: journalText
-  //       })
-  //     });
-  //     if (response.ok) {
-  //       const data = await response.json();
-  //       setDescriptions(prev => ({ ...prev, [index]: data.description }));
-  //     } else {
-  //       console.error("Error fetching description:", response.status);
-  //     }
-  //   } catch (error) {
-  //     console.error("Failed to fetch description:", error);
-  //   }
-  // };
+  
 
   useEffect(() => {
     const fetchJournals = async () => {
