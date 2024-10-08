@@ -1,5 +1,5 @@
 //@ts-ignore
- //@ts-nocheck
+//@ts-nocheck
 import { Layout } from '@/components/custom/layout'
 //import { Search } from '@/components/search'
 import ThemeSwitch from '@/components/theme-switch'
@@ -19,6 +19,7 @@ import {
 } from '@/components/ui/select'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 
 export default function Home() {
   const [results,setResults]=useState(0)
@@ -29,7 +30,7 @@ export default function Home() {
   const pageSize = 10; 
   const [numberJournals,setNumberJournals]=useState(0);
  // const[journalDescription,setJournalDescription]=useState('We investigated the effects of junction curvature on adhesion in groups of orange sclerocytes, a type of cell found in the lens of the eye. We found that cells in curved junctions adhered more strongly than cells in straight junctions. This was due to a number of factors, including the increased tension in curved junctions and thepresence of a protein called talin, which isinvolved in cell adhesion. Our results suggest that junction curvature plays an important role in the organization and function of tissues.')
-  const [descriptions, setDescriptions] = useState({});
+  // const [descriptions, setDescriptions] = useState({});
   const [filters, setFilters] = useState({
     Present_on_ISSN: null,
     african_index_medicus: null,
@@ -65,27 +66,28 @@ export default function Home() {
   };
 
   // Function to call the description API
-  const fetchDescription = async (journalText, index) => {
-    try {
-      const response = await fetch('https://aphrc.site/journal_api/generate-description/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          journal_text: journalText
-        })
-      });
-      if (response.ok) {
-        const data = await response.json();
-        setDescriptions(prev => ({ ...prev, [index]: data.description }));
-      } else {
-        console.error("Error fetching description:", response.status);
-      }
-    } catch (error) {
-      console.error("Failed to fetch description:", error);
-    }
-  };
+
+  // const fetchDescription = async (journalText, index) => {
+  //   try {
+  //     const response = await fetch('https://aphrc.site/journal_api/generate-description/', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json'
+  //       },
+  //       body: JSON.stringify({
+  //         journal_text: journalText
+  //       })
+  //     });
+  //     if (response.ok) {
+  //       const data = await response.json();
+  //       setDescriptions(prev => ({ ...prev, [index]: data.description }));
+  //     } else {
+  //       console.error("Error fetching description:", response.status);
+  //     }
+  //   } catch (error) {
+  //     console.error("Failed to fetch description:", error);
+  //   }
+  // };
 
   useEffect(() => {
     const fetchJournals = async () => {
@@ -114,10 +116,11 @@ export default function Home() {
         setNumberJournals(data.count)
         //console.log(results)
         // Fetch descriptions for each journal
-        data.results.forEach((journal, i) => {
-          const journalText = journal.journal_title ? journal.journal_title : "Journal title unspecified";
-          fetchDescription(journalText, i);  // Fetch description and store in state
-        });
+
+        // data.results.forEach((journal, i) => {
+        //   const journalText = journal.journal_title ? journal.journal_title : "Journal title unspecified";
+        //   fetchDescription(journalText, i);  // Fetch description and store in state
+        // });
       } catch (error) {
         
         window.location.reload();
@@ -289,9 +292,9 @@ export default function Home() {
                       {journals.map((journal, i) => (
                         <Card key={i} className='mb-4'>
                           <CardContent className='pt-6'>
-                            
+                          
                             <h2 className='mb-2 text-lg font-semibold text-blue-800'>
-                            {journal.journal_title ? journal.journal_title:"journal title unspecified"}
+                            <Link to={`/journals/${journal.id}`}> {journal.journal_title ? journal.journal_title:"journal title unspecified"}</Link>
                             </h2>
                             <p className='mb-2 text-sm text-gray-600'>
                             {journal.publishers_name?journal.publishers_name:"publisher unspecified"}
@@ -303,11 +306,15 @@ export default function Home() {
                             <p className='mb-2 text-sm text-orange-800'>
                             {journal.country?journal.country.country:"country unspecified"}
                             </p>
-                            <p className='mb-2 text-sm'>
-                             {/* {journalDescription} */}
+                            {/* <p className='mb-2 text-sm'>
+                             {journalDescription}
                              {descriptions[i] ? descriptions[i] : "Generating description..."}
                             
-                            </p>
+                            </p> */}
+                           <a href={`/journals/${journal.id}`}>
+                           <button type="button" class="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                            Read the Journal
+                           </button></a>
                           </CardContent>
                         </Card>
                       ))}

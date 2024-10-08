@@ -41,7 +41,7 @@ export function TopNav({ className, links, ...props }: TopNavProps) {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-
+ 
       <nav
         className={cn(
           'hidden items-center space-x-4 md:flex lg:space-x-6',

@@ -95,6 +95,12 @@ const router = createBrowserRouter([
         }),
       },
       {
+        path: 'journals/:journalId',
+        lazy: async () => ({
+          Component: (await import('./pages/journalDetail')).default,
+        }),
+      },
+      {
         path: 'indexes',
         lazy: async () => ({
           Component: (await import('./pages/indexes')).default,
