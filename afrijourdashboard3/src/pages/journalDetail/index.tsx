@@ -7,17 +7,53 @@ import { Card, CardContent} from '@/components/ui/card'
 import { Layout } from '@/components/custom/layout'
 import { TopNav } from '@/components/top-nav'
 import { UserNav } from '@/components/user-nav'
+import { IconDownload } from '@tabler/icons-react'; // Import the download icon
+// interface Volume {
+//   volume_number: number;
+//   articles: { title: string; }[];
+// }
 
+// interface Journal {
+//   journal_title?: string;
+//   summary?: string; // Add the summary property
+//   // Add other properties as needed
+//   link?: string;
+//  }
+
+// interface Volume {
+//   volume_number: number;
+//   articles: { title: string }[];
+// }
+
+interface Article {
+  id: number;
+  title: string;
+  authors: string; // Assuming authors is a string
+  keywords: string;
+  pdf: string;
+  publication_date: string;
+}
+interface Volume {
+  id: number;
+  volume_number: number;
+  created_at: string;
+  issue_number:number;
+  year:number;
+  articles: Article[];
+}
+interface Journal {
+  journal_title?: string;
+  summary?: string;
+  link?: string;
+  volumes?: Volume[];
+}
 
 export default function JournalDetail() {
     const { journalId } = useParams() // This retrieves the journalId from the URL
     //const [journal, setJournal] = useState(null)
-    interface Journal {
-      journal_title?: string;
-      summary?: string; // Add the summary property
-      // Add other properties as needed
-      link?: string;
-     }
+    const [expandedVolume, setExpandedVolume] = useState<number | null>(null)
+
+    
   const [journal, setJournal] = useState<Journal | null>(null);
     //const [journal, setJournal] = useState<{ journal_title?: string } | null>(null); // Inline type for journal
  
@@ -46,6 +82,10 @@ export default function JournalDetail() {
     )
   // Split the link string into an array of URLs
   const links = journal.link ? journal.link.split(', ') : [];
+
+  const handleToggleVolume = (volumeNumber: number) => {
+    setExpandedVolume(expandedVolume === volumeNumber ? null : volumeNumber)
+  }
 
   return (
     <Layout>
@@ -79,7 +119,106 @@ export default function JournalDetail() {
                                                     </div>}
                     </p>
                     
-                    <p>
+                    {/* <p>
+                      {links.map((link, index) => {
+                        // Extract domain name to use as the tag label
+                        const label = new URL(link).hostname.replace('www.', '');
+
+                        return (
+                          <a
+                            key={index}
+                            href={link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-block bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-semibold hover:bg-blue-200 transition duration-200 mr-2 mb-2"
+                          >
+                            {label}
+                          </a>
+                        );
+                      })}
+                   </p> */}
+                   <h3 className="text-lg font-bold mt-6">Volumes and Articles</h3>
+                {/* {journal.volumes?.map((volume) => (
+                  <div key={volume.volume_number} className="my-4">
+                    <h4
+                      className="text-md font-semibold cursor-pointer text-blue-600 hover:underline"
+                      onClick={() => handleToggleVolume(volume.volume_number)}
+                    >
+                      Volume {volume.volume_number}
+                    </h4>
+
+                    {expandedVolume === volume.volume_number && (
+                      <ul className="pl-4">
+                        {volume.articles.length > 0 ? (
+                          volume.articles.map((article, index) => (
+                            <li key={index} className="text-sm">
+                              {article.title}
+                            </li>
+                          ))
+                        ) : (
+                          <li className="text-sm">No articles available</li>
+                        )}
+                      </ul>
+                    )}
+                  </div>
+                ))} */}
+{(journal.volumes || []).length > 0 ? (
+  (journal.volumes || []).map((volume) => (
+    <div key={volume.volume_number} className="my-4">
+      <h4
+        className="text-md font-semibold cursor-pointer text-blue-600 hover:underline"
+        onClick={() => handleToggleVolume(volume.volume_number)}
+      >
+        Volume {volume.volume_number}(No. {volume.issue_number},Year. {volume.year})
+      </h4>
+      
+      {expandedVolume === volume.volume_number && (
+        <ul className="pl-4">
+          <h2 className='text-md font-semibold  text-blue-600 '>Articles</h2>
+          {volume.articles.length > 0 ? (
+            volume.articles.map((article, index) => (
+              <li key={index} className="flex flex-col sm:flex-row items-start sm:items-center justify-between text-sm mb-2 border-b border-gray-300 last:border-b-0">
+                <div className="flex-grow">
+                  <h1 className="font-semibold">{article.title}</h1>
+                  <h2 className="text-gray-600">{article.authors}</h2>
+                </div>
+                <IconDownload 
+                  className="text-blue-600 hover:text-blue-800 cursor-pointer mt-2 sm:mt-0 sm:ml-4"
+                  onClick={async () => {
+                    try {
+                      const response = await fetch(`https://aphrc.site${article.pdf}`);
+                      if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                      }
+                      const blob = await response.blob();
+                      const url = window.URL.createObjectURL(blob);
+                      const link = document.createElement('a');
+                      link.href = url;
+                      link.setAttribute('download', article.title || 'article.pdf');
+                      document.body.appendChild(link);
+                      link.click();
+                      document.body.removeChild(link);
+                      window.URL.revokeObjectURL(url);
+                    } catch (error) {
+                      console.error('Error downloading the PDF:', error);
+                    }
+                  }}
+                />
+              </li>
+            ))
+          ) : (
+            <li className="text-sm">No articles available</li>
+          )}
+        </ul>
+      )}
+    </div>
+  ))
+) : (
+  <p className="text-sm text-gray-600">No volumes and articles available</p>
+)}
+
+ <h3 className="text-lg font-bold mt-6">Official Websites</h3>
+ <p>
                       {links.map((link, index) => {
                         // Extract domain name to use as the tag label
                         const label = new URL(link).hostname.replace('www.', '');
@@ -97,7 +236,7 @@ export default function JournalDetail() {
                         );
                       })}
                    </p>
-                    </CardContent>
+                  </CardContent>
                     </Card>
                     </ScrollArea>
         </div>
