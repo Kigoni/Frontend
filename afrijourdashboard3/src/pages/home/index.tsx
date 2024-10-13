@@ -29,8 +29,7 @@ export default function Home() {
   const [journals, setJournals] = useState([]);
   const pageSize = 10; 
   const [numberJournals,setNumberJournals]=useState(0);
- // const[journalDescription,setJournalDescription]=useState('We investigated the effects of junction curvature on adhesion in groups of orange sclerocytes, a type of cell found in the lens of the eye. We found that cells in curved junctions adhered more strongly than cells in straight junctions. This was due to a number of factors, including the increased tension in curved junctions and thepresence of a protein called talin, which isinvolved in cell adhesion. Our results suggest that junction curvature plays an important role in the organization and function of tissues.')
-  // const [descriptions, setDescriptions] = useState({});
+ 
   const [filters, setFilters] = useState({
     Present_on_ISSN: null,
     african_index_medicus: null,
@@ -41,7 +40,7 @@ export default function Home() {
     online_publisher_in_africa: null,
     open_access_journal: null,
   });
-//http://198.211.110.243/journal_api/journals/search/
+
   const baseUrl = "https://aphrc.site/journal_api/journals/search/";
 
   const handleCheckboxChange = (name: string, checked: boolean) => {
@@ -179,7 +178,7 @@ export default function Home() {
                 <div className='mb-8 flex items-center justify-between'>
                   <p>{results} results</p>
                   <div className='flex items-center space-x-2'>
-                    <Select>
+                    {/* <Select>
                       <SelectTrigger className='w-[180px]'>
                         <SelectValue placeholder='Sort by' />
                       </SelectTrigger>
@@ -187,7 +186,7 @@ export default function Home() {
                         <SelectItem value='best-match'>Best match</SelectItem>
                         <SelectItem value='most-recent'>Most recent</SelectItem>
                       </SelectContent>
-                    </Select>
+                    </Select> */}
                     <Button variant='outline' size='icon' onClick={handlePreviousPage} disabled={currentPage === 1}>
                       <ChevronLeft className='h-4 w-4' />
                     </Button>
@@ -196,75 +195,8 @@ export default function Home() {
                     </Button>
                   </div>
                 </div>
-                <div className='grid gap-8  md:grid-cols-[250px_1fr]'>
-                  <aside className='space-y-5'>
-                    <Card>
-                      <CardHeader>
-                        <CardTitle>Filters</CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <div className='space-y-4'>
-                          <div>
-                            <h3 className='mb-2 font-semibold'>
-                              Articles Hosted
-                            </h3>
-                            <div className='space-y-2'>
-                              <div className='flex items-center'>
-                                <Checkbox id='abstract' checked={filters.online_publisher_in_africa === true}
-          onCheckedChange={(checked) => handleCheckboxChange('online_publisher_in_africa', checked)} />
-                                <label htmlFor='abstract' className='ml-2'>
-                                  Publisher is in Africa
-                                </label>
-                              </div>
-                              <div className='flex items-center'>
-                                <Checkbox id='fulltext' checked={filters.hosted_on_INASPS === true}
-          onCheckedChange={(checked) => handleCheckboxChange('hosted_on_INASPS', checked)}/>
-                                <label htmlFor='fulltext' className='ml-2'>
-                                Hosted on INASP'S Journal online
-                                </label>
-                              </div>
-                              <div className='flex items-center'>
-                                <Checkbox id='fulltext' checked={filters.directory_of_african_journals === true}
-          onCheckedChange={(checked) => handleCheckboxChange('directory_of_african_journals', checked)} />
-                                <label htmlFor='fulltext' className='ml-2'>
-                                Journal listed in the Directory of Open Access (DOAJ)
-                                </label>
-                              </div>
-                              <div className='flex items-center'>
-                                <Checkbox id='fulltext'  checked={filters.african_index_medicus === true}
-          onCheckedChange={(checked) => handleCheckboxChange('african_index_medicus', checked)}/>
-                                <label htmlFor='fulltext' className='ml-2'>
-                                African Index Medicus
-                                </label>
-                              </div>
-                            </div>
-                          </div>
-                          <div>
-                            <h3 className='mb-2 font-semibold'>
-                              Indexed
-                            </h3>
-                            <div className='space-y-2'>
-                              <div className='flex items-center'>
-                                <Checkbox id='1year' checked={filters.indexed_on_google_scholar === true}
-          onCheckedChange={(checked) => handleCheckboxChange('indexed_on_google_scholar', checked)}/>
-                                <label htmlFor='1year' className='ml-2'>
-                                  Google Scholar
-                                </label>
-                              </div>
-                              <div className='flex items-center'>
-                                <Checkbox id='5years' checked={filters.member_of_Committee_on_publication_Ethics === true}
-          onCheckedChange={(checked) => handleCheckboxChange('member_of_Committee_on_publication_Ethics', checked)}/>
-                                <label htmlFor='5years' className='ml-2'>
-                                  Member of C.O.P.E
-                                </label>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                    
-                  </aside>
+                <div className='grid gap-8 '>
+                 
                   <div className='space-y-4'>
                     <ScrollArea className='h-[1200px]'>
                       {journals.map((journal, i) => (
@@ -285,14 +217,27 @@ export default function Home() {
                             {journal.country?journal.country.country:"country unspecified"}
                             </p>
                             {/* <p className='mb-2 text-sm'>
-                             {journalDescription}
-                             {descriptions[i] ? descriptions[i] : "Generating description..."}
-                            
-                            </p> */}
+                             {journal.summary?journal.summary:"no summary specified"}
+                            </p>
                            <a href={`/journals/${journal.id}`}>
                            <button type="button" class="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
                             Read the Journal
-                           </button></a>
+                           </button></a> */}
+                           <p className='mb-2 text-sm'>
+                            {journal.summary
+                              ? journal.summary.length > 500 
+                                ? `${journal.summary.substring(0, 500)}...` 
+                                : journal.summary
+                              : "No summary specified"}
+                          </p>
+
+                          {journal.summary && journal.summary.length > 500 && (
+                            <Link to={`/journals/${journal.id}`} className='text-blue-600 text-sm font-medium'>
+                            <button type="button" class="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                            Read the Journal
+                           </button>
+                            </Link>
+                          )}
                           </CardContent>
                         </Card>
                       ))}

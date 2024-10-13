@@ -119,49 +119,9 @@ export default function JournalDetail() {
                                                     </div>}
                     </p>
                     
-                    {/* <p>
-                      {links.map((link, index) => {
-                        // Extract domain name to use as the tag label
-                        const label = new URL(link).hostname.replace('www.', '');
-
-                        return (
-                          <a
-                            key={index}
-                            href={link}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-block bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-semibold hover:bg-blue-200 transition duration-200 mr-2 mb-2"
-                          >
-                            {label}
-                          </a>
-                        );
-                      })}
-                   </p> */}
+                  
                    <h3 className="text-lg font-bold mt-6">Volumes and Articles</h3>
-                {/* {journal.volumes?.map((volume) => (
-                  <div key={volume.volume_number} className="my-4">
-                    <h4
-                      className="text-md font-semibold cursor-pointer text-blue-600 hover:underline"
-                      onClick={() => handleToggleVolume(volume.volume_number)}
-                    >
-                      Volume {volume.volume_number}
-                    </h4>
-
-                    {expandedVolume === volume.volume_number && (
-                      <ul className="pl-4">
-                        {volume.articles.length > 0 ? (
-                          volume.articles.map((article, index) => (
-                            <li key={index} className="text-sm">
-                              {article.title}
-                            </li>
-                          ))
-                        ) : (
-                          <li className="text-sm">No articles available</li>
-                        )}
-                      </ul>
-                    )}
-                  </div>
-                ))} */}
+               
 {(journal.volumes || []).length > 0 ? (
   (journal.volumes || []).map((volume) => (
     <div key={volume.volume_number} className="my-4">
