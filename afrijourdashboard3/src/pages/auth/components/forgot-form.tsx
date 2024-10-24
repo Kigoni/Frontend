@@ -13,6 +13,8 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import {useContext} from 'react'
+import AuthContext from '../../../AuthContext'
 
 interface ForgotFormProps extends HTMLAttributes<HTMLDivElement> {}
 
@@ -25,6 +27,15 @@ const formSchema = z.object({
 
 export function ForgotForm({ className, ...props }: ForgotFormProps) {
   const [isLoading, setIsLoading] = useState(false)
+  const authContext = useContext(AuthContext);
+
+  if (!authContext) {
+    // Handle the case where AuthContext is null (e.g., render a fallback UI or show a loading state)
+    return <div> Loading...</div>;
+  }
+
+  // Now it's safe to access loginUser method from authContext
+  const {resetPassword} = authContext;
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -34,7 +45,8 @@ export function ForgotForm({ className, ...props }: ForgotFormProps) {
   function onSubmit(data: z.infer<typeof formSchema>) {
     setIsLoading(true)
     console.log(data)
-
+    resetPassword(data.email)
+    
     setTimeout(() => {
       setIsLoading(false)
     }, 3000)

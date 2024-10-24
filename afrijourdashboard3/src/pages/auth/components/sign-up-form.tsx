@@ -15,11 +15,17 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/custom/button'
 import { PasswordInput } from '@/components/custom/password-input'
 import { cn } from '@/lib/utils'
+import { useContext } from 'react'
+import AuthContext from '../../../AuthContext'
 
 interface SignUpFormProps extends HTMLAttributes<HTMLDivElement> {}
 
 const formSchema = z
   .object({
+    username: z
+      .string()
+      .min(1, { message: 'Please enter your username' })
+      .max(30, { message: 'Username cannot exceed 30 characters' }),
     email: z
       .string()
       .min(1, { message: 'Please enter your email' })
@@ -32,28 +38,34 @@ const formSchema = z
       .min(7, {
         message: 'Password must be at least 7 characters long',
       }),
-    confirmPassword: z.string(),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords don't match.",
-    path: ['confirmPassword'],
   })
 
 export function SignUpForm({ className, ...props }: SignUpFormProps) {
   const [isLoading, setIsLoading] = useState(false)
+  const authContext = useContext(AuthContext)
+
+  if (!authContext) {
+    return <div> Loading...</div>
+  }
+
+  const { registerUser } = authContext
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      username: '',
       email: '',
       password: '',
-      confirmPassword: '',
     },
   })
 
   function onSubmit(data: z.infer<typeof formSchema>) {
     setIsLoading(true)
-    console.log(data)
+    console.log(data.username)
+    console.log(data.email)
+    console.log(data.password)
+
+    registerUser(data.email,data.username,data.password)
 
     setTimeout(() => {
       setIsLoading(false)
@@ -65,6 +77,19 @@ export function SignUpForm({ className, ...props }: SignUpFormProps) {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <div className='grid gap-2'>
+            <FormField
+              control={form.control}
+              name='username'
+              render={({ field }) => (
+                <FormItem className='space-y-1'>
+                  <FormLabel>Username</FormLabel>
+                  <FormControl>
+                    <Input placeholder='Enter your username' {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <FormField
               control={form.control}
               name='email'
@@ -84,19 +109,6 @@ export function SignUpForm({ className, ...props }: SignUpFormProps) {
               render={({ field }) => (
                 <FormItem className='space-y-1'>
                   <FormLabel>Password</FormLabel>
-                  <FormControl>
-                    <PasswordInput placeholder='********' {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name='confirmPassword'
-              render={({ field }) => (
-                <FormItem className='space-y-1'>
-                  <FormLabel>Confirm Password</FormLabel>
                   <FormControl>
                     <PasswordInput placeholder='********' {...field} />
                   </FormControl>

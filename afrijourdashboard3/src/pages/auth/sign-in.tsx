@@ -1,9 +1,15 @@
 import { UserAuthForm } from './components/user-auth-form'
 import ViteLogo from '@/assets/vite.svg'
+import { Link } from 'react-router-dom'
+// import React,{useContext} from 'react'
+// import AuthContext from '../../AuthContext'
 
 export default function SignIn() {
+  //let {user}=useContext(AuthContext)
+  //let {loginUser}=useContext(AuthContext)
   return (
     <>
+     
       <div className='container relative grid h-svh flex-col items-center justify-center lg:max-w-none lg:grid-cols-2 lg:px-0'>
         <div className='relative hidden h-full flex-col bg-muted p-10 text-white dark:border-r lg:flex'>
           <div className='absolute inset-0 bg-zinc-900' />
@@ -48,7 +54,14 @@ export default function SignIn() {
               <h1 className='text-2xl font-semibold tracking-tight'>Login</h1>
               <p className='text-sm text-muted-foreground'>
                 Enter your email and password below <br />
-                to log into your account
+                to log into your account<br />
+                Don't have an account?{' '}
+                <Link
+                  to='/sign-up'
+                  className='underline underline-offset-4 hover:text-primary'
+                >
+                  Sign Up
+                </Link>
               </p>
             </div>
             <UserAuthForm />

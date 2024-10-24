@@ -237,75 +237,95 @@ export default function Journals() {
                 </TableBody>
               </Table>
               <Pagination>
-                <PaginationContent>
-                  <PaginationItem>
-                    <PaginationPrevious
-                      href="#"
-                      onClick={() => handlePageChange(currentPage - 1)}
-                      disabled={currentPage === 1}
-                    />
-                  </PaginationItem>
+  <PaginationContent>
+    <PaginationItem>
+      <PaginationPrevious
+        href="#"
+        onClick={(event) => {
+          event.preventDefault();
+          if (currentPage > 1) {
+            handlePageChange(currentPage - 1);
+          }
+        }}
+        disabled={currentPage <= 1} // Disable if on the first page
+      />
+    </PaginationItem>
 
-                  {/* Show first page */}
-                  {currentPage > 3 && (
-                    <>
-                      <PaginationItem>
-                        <PaginationLink
-                          href="#"
-                          isActive={currentPage === 1}
-                          onClick={() => handlePageChange(1)}
-                        >
-                          1
-                        </PaginationLink>
-                      </PaginationItem>
-                      <PaginationEllipsis />
-                    </>
-                  )}
+    {/* Show first page */}
+    {currentPage > 3 && (
+      <>
+        <PaginationItem>
+          <PaginationLink
+            href="#"
+            isActive={currentPage === 1}
+            onClick={(event) => {
+              event.preventDefault();
+              handlePageChange(1);
+            }}
+          >
+            1
+          </PaginationLink>
+        </PaginationItem>
+        <PaginationEllipsis />
+      </>
+    )}
 
-                  {/* Show previous, current, and next page neighbors */}
-                  {[...Array(totalPages)]
-                    .map((_, index) => index + 1)
-                    .filter(
-                      (page) =>
-                        page === 1 || page === totalPages || (page >= currentPage - 2 && page <= currentPage + 2)
-                    )
-                    .map((page) => (
-                      <PaginationItem key={page}>
-                        <PaginationLink
-                          href="#"
-                          isActive={currentPage === page}
-                          onClick={() => handlePageChange(page)}
-                        >
-                          {page}
-                        </PaginationLink>
-                      </PaginationItem>
-                    ))}
+    {/* Show previous, current, and next page neighbors */}
+    {[...Array(totalPages)]
+      .map((_, index) => index + 1)
+      .filter(
+        (page) =>
+          page === 1 || page === totalPages || (page >= currentPage - 2 && page <= currentPage + 2)
+      )
+      .map((page) => (
+        <PaginationItem key={page}>
+          <PaginationLink
+            href="#"
+            isActive={currentPage === page}
+            onClick={(event) => {
+              event.preventDefault();
+              handlePageChange(page);
+            }}
+          >
+            {page}
+          </PaginationLink>
+        </PaginationItem>
+      ))}
 
-                  {/* Show ellipsis before last page */}
-                  {currentPage < totalPages - 2 && (
-                    <>
-                      <PaginationEllipsis />
-                      <PaginationItem>
-                        <PaginationLink
-                          href="#"
-                          isActive={currentPage === totalPages}
-                          onClick={() => handlePageChange(totalPages)}
-                        >
-                          {totalPages}
-                        </PaginationLink>
-                      </PaginationItem>
-                    </>
-                  )}
+    {/* Show ellipsis before last page */}
+    {currentPage < totalPages - 2 && (
+      <>
+        <PaginationEllipsis />
+        <PaginationItem>
+          <PaginationLink
+            href="#"
+            isActive={currentPage === totalPages}
+            onClick={(event) => {
+              event.preventDefault();
+              handlePageChange(totalPages);
+            }}
+          >
+            {totalPages}
+          </PaginationLink>
+        </PaginationItem>
+      </>
+    )}
 
-                    <PaginationItem>
-                      <PaginationNext
-                        href="#"
-                        onClick={() => handlePageChange(currentPage + 1)}
-                        disabled={currentPage === totalPages}
-                      />
-                    </PaginationItem>
-                </PaginationContent>
-              </Pagination>
+    <PaginationItem>
+      <PaginationNext
+        href="#"
+        onClick={(event) => {
+          event.preventDefault();
+          if (currentPage < totalPages) {
+            handlePageChange(currentPage + 1);
+          }
+        }}
+        disabled={currentPage >= totalPages} // Disable if on the last page
+      />
+    </PaginationItem>
+  </PaginationContent>
+</Pagination>
+
 
             </div>
           </div>

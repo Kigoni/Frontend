@@ -4,12 +4,19 @@ import NotFoundError from './pages/errors/not-found-error'
 import MaintenanceError from './pages/errors/maintenance-error'
 import UnauthorisedError from './pages/errors/unauthorised-error.tsx'
 
+
 const router = createBrowserRouter([
   // Auth routes
   {
     path: '/sign-in',
     lazy: async () => ({
       Component: (await import('./pages/auth/sign-in')).default,
+    }),
+  },
+  {
+    path: '/reset/:uid/:token',
+    lazy: async () => ({
+      Component: (await import('./pages/password')).default,
     }),
   },
   {
@@ -93,6 +100,26 @@ const router = createBrowserRouter([
         lazy: async () => ({
           Component: (await import('./pages/journals')).default,
         }),
+      },
+      // {
+      //   path: 'upload',
+      //   lazy: async () => ({
+      //     Component: (await import('./pages/upload')).default,
+      //   }),
+      // },
+      {
+        path: 'upload',
+        lazy: async () => {
+          const Upload = (await import('./pages/upload')).default;
+          const ProtectedRoute = (await import('./ProtectedRoute')).default;
+          return {
+            Component: (props: any) => (
+              <ProtectedRoute>
+                <Upload {...props} />
+              </ProtectedRoute>
+            ),
+          };
+        },
       },
       {
         path: 'journals/:journalId',

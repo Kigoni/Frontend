@@ -46,6 +46,13 @@ interface Journal {
   summary?: string;
   link?: string;
   volumes?: Volume[];
+  image?: {
+    id: number;
+    image: string;
+    description: string;
+    uploaded_at: string;
+  };
+  
 }
 
 export default function JournalDetail() {
@@ -106,9 +113,17 @@ export default function JournalDetail() {
                     <ScrollArea className='h-[1200px]'>
                     <Card  className='mb-4'>
                     <CardContent className='pt-6'>
+                    {journal.image ? (
+                  <img 
+                    src={`https://aphrc.site${journal.image.image}`} 
+                    alt={journal.image.description || "Image"} 
+                    className="w-48 h-auto" 
+                   />
+                   ) : null} {/* Render nothing if the image is unavailable */}
                     <h2 className='mb-2 text-lg font-semibold text-blue-800'>
                         {journal.journal_title ? journal.journal_title:"journal title unspecified"}
                     </h2>
+                    
                     <p className='mb-2 text-sm'>
                         {journal ? journal.summary:<div role="status">
                                                       <svg aria-hidden="true" className="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">

@@ -14,12 +14,13 @@ import {
   IconUserShield,
   IconLock,
   IconBook,
-  IconMessage,
+  // IconMessage,
   IconNews,
   IconList,
   IconDatabase,
   IconHome,
 } from '@tabler/icons-react'
+import { IconWorldUpload } from '@tabler/icons-react';
 
 export interface NavLink {
   title: string
@@ -38,6 +39,12 @@ export const sidelinks: SideLink[] = [
     label: '',
     href: '/',
     icon: <IconHome size={18} />,
+  },
+  {
+    title: 'Upload Journal',
+    label: '',
+    href: '/upload',
+    icon: <IconWorldUpload size={18} />,
   },
   {
     title: 'Dashboard',
@@ -89,24 +96,26 @@ export const sidelinks: SideLink[] = [
     icon: <IconDatabase size={18} />,
   },
 
-  {
-    title: 'Reviewers',
-    label: '',
-    href: '/users',
-    icon: <IconMessage size={18} />,
-  },
-  {
-    title: 'Reports',
-    label: '',
-    href: '/users',
-    icon: <IconChartHistogram size={18} />,
-  },
+  // {
+  //   title: 'Reviewers',
+  //   label: '',
+  //   href: '/users',
+  //   icon: <IconMessage size={18} />,
+  // },
+  // {
+  //   title: 'Reports',
+  //   label: '',
+  //   href: '/users',
+  //   icon: <IconChartHistogram size={18} />,
+  // },
   {
     title: 'News & Updates',
     label: '',
     href: '/users',
     icon: <IconNews size={18} />,
   },
+
+
   // {
   //   title: 'Users',
   //   label: '',

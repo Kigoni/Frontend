@@ -10,8 +10,26 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import {useContext} from 'react'
+import AuthContext from '../AuthContext'
 
 export function UserNav() {
+  const authContext = useContext(AuthContext);
+  if (!authContext) {
+    return <div> Loading...</div>;
+  }
+  // Now it's safe to access loginUser method from authContext
+  const { user,logoutUser} = authContext;
+  console.log(user)
+  const handleLogout = () => {
+    // Logic for logging out the user
+    console.log("User logged out");
+    logoutUser()
+    // You can add your logout logic here, like clearing tokens, redirecting, etc.
+    // For example:
+    // localStorage.removeItem('token');
+    // window.location.href = '/login'; // Redirect to login page
+  };
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -25,9 +43,12 @@ export function UserNav() {
       <DropdownMenuContent className='w-56' align='end' forceMount>
         <DropdownMenuLabel className='font-normal'>
           <div className='flex flex-col space-y-1'>
-            <p className='text-sm font-medium leading-none'>mike</p>
+            <p className='text-sm font-medium leading-none'>{user ? user.user_name : 'mike'}</p>
             <p className='text-xs leading-none text-muted-foreground'>
-              mikekigoni5@gmail.com
+              {/* mikekigoni5@gmail.com */}
+              {/* {user.user_name} */}
+              {/* {user.email} */}
+              {user ? user.email : 'mikekigoni5@gmail.com'}
             </p>
           </div>
         </DropdownMenuLabel>
@@ -48,7 +69,7 @@ export function UserNav() {
           <DropdownMenuItem>New Team</DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={handleLogout}>
           Log out
           <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
         </DropdownMenuItem>
