@@ -26,6 +26,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     );
 
     const loginUser = async (email: string, password: string) => {
+        //https://aphrc.site/api/token/
         try {
             const response = await fetch('https://aphrc.site/api/token/', {
                 method: 'POST',
@@ -51,7 +52,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     };
 
     const registerUser = async (email: string,user_name:string, password: string) => {
-
+        //https://aphrc.site/api/register/
         try {
             const response = await fetch('https://aphrc.site/api/register/', {
                 method: 'POST',

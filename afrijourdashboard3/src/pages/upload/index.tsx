@@ -4,8 +4,16 @@ import { TopNav } from '@/components/top-nav'
 import { UserNav } from '@/components/user-nav'
 import {useState,useEffect,useContext} from 'react'
 import AuthContext from '../../AuthContext'
-
-
+import { LanguagePiechart } from './components/langauage-piechart'
+import { RadialChart } from './components/radial-chart'
+import Journals from './components/journal'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
 interface Platform {
   id: string; // or number, depending on your API response
   platform: string;
@@ -22,44 +30,11 @@ interface ThematicArea {
   id: string; // or number, based on your API response
   thematic_area: string;
 }
-// interface FormData {
-//   platform: string;
-//   country: string;
-//   language: string;
-//   thematic_area: string;
-//   // add other fields as needed
-// }
+
 
 
 export default function Upload() {
-  // const [formData, setFormData] = useState({
-  //   journal_title: '',
-  //   platform: '',
-  //   country: '',
-  //   publishers_name: '',
-  //   language: '',
-  //   thematic_area: '',
-  //   issn_number: '',
-  //   link: '',
-  //   aim_identifier: false,
-  //   medline: false,
-  //   google_scholar_index: false,
-  //   impact_factor: '',
-  //   sjr: false,
-  //   h_index: '',
-  //   eigen_factor: false,
-  //   eigen_metrix: '',
-  //   snip: false,
-  //   snip_metrix: '',
-  //   open_access_journal: false,
-  //   listed_in_doaj: false,
-  //   present_issn: false,
-  //   publisher_in_cope: false,
-  //   online_publisher_africa: false,
-  //   hosted_on_inasps: false,
-  //   summary: '',
-  //   user: '',
-  // });
+  
   const authContext = useContext(AuthContext);
   if (!authContext) {
     return <div> Loading...</div>;
@@ -67,34 +42,7 @@ export default function Upload() {
   // Now it's safe to access loginUser method from authContext
   const { user } = authContext;
   console.log(user)
-  // const [formData, setFormData] = useState({
-  //   journal_title: '',
-  //   platform: '',
-  //   country: '',
-  //   publishers_name: '',
-  //   language: '',
-  //   thematic_area: '',
-  //   issn_number: '',
-  //   link: '',
-  //   aim_identifier: false,
-  //   medline: false,
-  //   google_scholar_index: false,
-  //   impact_factor: '',
-  //   sjr: false,
-  //   h_index: '',
-  //   eigen_factor: false,
-  //   eigen_metrix: '',
-  //   snip: false,
-  //   snip_metrix: '',
-  //   open_access_journal: false,
-  //   listed_in_doaj: false,
-  //   present_issn: false,
-  //   publisher_in_cope: false,
-  //   online_publisher_africa: false,
-  //   hosted_on_inasps: false,
-  //   summary: '',
-  //   user: '',
-  // });
+ 
 
    useEffect(() => {
     const authTokens = localStorage.getItem('authTokens');
@@ -146,6 +94,7 @@ export default function Upload() {
   const [thematic, setThematic] = useState<ThematicArea[]>([]);
     // Empty dependency array ensures it runs once when the component mounts
     //http://127.0.0.1:8000/journal_api/api/languages/
+    //https://aphrc.site/journal_api/api/languages/
     useEffect(() => {
       fetch('https://aphrc.site/journal_api/api/languages/')
         .then(response => response.json())
@@ -157,6 +106,7 @@ export default function Upload() {
       console.log('Updated languages:', languages);  // This will log whenever languages state updates
     }, [languages]); 
  //http://127.0.0.1:8000/journal_api/api/country/
+ //https://aphrc.site/journal_api/api/country/
     useEffect(() => {
       fetch('https://aphrc.site/journal_api/api/country/')
         .then(response => response.json())
@@ -168,6 +118,7 @@ export default function Upload() {
       console.log('Updated countries:', countries);  // This will log whenever countries state updates
     }, [countries]); 
     //http://127.0.0.1:8000/journal_api/api/platform/
+    //https://aphrc.site/journal_api/api/platform/
     useEffect(() => {
       fetch('https://aphrc.site/journal_api/api/platform/')
         .then(response => response.json())
@@ -179,6 +130,7 @@ export default function Upload() {
       console.log('Updated platforms:', platforms);  // This will log whenever countries state updates
     }, [platforms]); 
     //http://127.0.0.1:8000/journal_api/api/thematic/
+    //https://aphrc.site/journal_api/api/thematic/
     useEffect(() => {
       fetch('https://aphrc.site/journal_api/api/thematic/')
         .then(response => response.json())
@@ -211,6 +163,7 @@ export default function Upload() {
   };
   //https://aphrc.site/
   //http://127.0.0.1:8000/journal_api/api/journalcreate/
+  //https://aphrc.site/journal_api/api/journalcreate/
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -256,16 +209,42 @@ export default function Upload() {
       <Layout.Body>
        
        <h1>Welcome {user.user_name},</h1><br></br>
+       <div className='grid grid-cols-1 gap-4 lg:grid-cols-7'>
+       <Card className='col-span-1 lg:col-span-2'>
+                <CardHeader>
+                  <CardTitle>Journal Language Distribution</CardTitle>
+                  <CardDescription>Languages.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {/* <RecentSales /> */}
+                  <LanguagePiechart />
+                </CardContent>
+               
+       </Card>
+       <Card className='col-span-1 lg:col-span-2'>
+                <CardHeader>
+                  <CardTitle>Journals Disciplines Distribution</CardTitle>
+                  <CardDescription>Disciplines/Thematic Area.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <RadialChart />
+                </CardContent>
+        </Card>
+       </div>
+       <br></br><br></br>
+       <p  className="cursor-pointer text-blue-500 font-medium hover:text-blue-700">Submit Journals To Reviewers</p>
+       <p 
+       className="cursor-pointer text-blue-500 font-medium hover:text-blue-700">
+        List of added Journals
 
-
-
-       
+       </p>
+       <Journals/>
       {/* Text to show/hide form */}
       <p
         onClick={toggleFormVisibility}
         className="cursor-pointer text-blue-500 font-medium hover:text-blue-700"
       >
-        Add Journal
+        Add Journal Manually
       </p>
 
       {/* Form is conditionally rendered based on isFormVisible state */}
@@ -569,7 +548,7 @@ export default function Upload() {
       
           <div className="col-span-3 lg:col-span-1 space-y-4">
             <div className="flex items-center">
-              <label className="block text-gray-700 font-medium">Medline</label>
+              <label className="block text-gray-700 font-medium">Medicine and Health Journal</label>
               <input
                 type="checkbox"
                 name="medline"
