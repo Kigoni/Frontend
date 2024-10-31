@@ -28,6 +28,7 @@ import { IconSearch } from '@tabler/icons-react'
 import { Input } from '@/components/ui/input'
 import { Checkbox } from '@/components/ui/checkbox'
 import React from 'react';
+import { Link } from 'react-router-dom'
 
 export default function Journals() {
   const [searchTerm, setSearchTerm] = useState('')
@@ -220,7 +221,7 @@ export default function Journals() {
                           onCheckedChange={() => handleSelectJournal(journal)}
                         />
                       </TableCell>
-                      <TableCell>{journal.journal_title?journal.journal_title:"journal title unspecified"}</TableCell>
+                      <TableCell>  <Link to={`/journals/${journal.id}`}>{journal.journal_title?journal.journal_title:"journal title unspecified"}</Link></TableCell>
                       <TableCell>{journal.publishers_name?journal.publishers_name:"publisher unspecified"}</TableCell>
                       <TableCell>{journal.country?journal.country.country:"country unspecified"}</TableCell>
                       <TableCell>{journal.platform?journal.platform.platform:"platform not specified"}</TableCell>
