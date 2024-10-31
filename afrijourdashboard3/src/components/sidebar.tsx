@@ -172,7 +172,7 @@ export default function Sidebar({
             className={`flex items-center ${!isCollapsed ? 'gap-2' : ''}`}
           >
             <img
-              src='/src/assets/logo.webp'
+              src='https://raw.githubusercontent.com/ronnyonjetech/Frontend/refs/heads/v4/afrijourdashboard3/public/logo.webp'
               alt='Afrijour Logo'
               className='h-8 md:h-10 lg:h-12 object-contain'
             />
