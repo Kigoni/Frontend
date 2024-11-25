@@ -186,7 +186,8 @@ export default function Home() {
 
       {/* ===== Main ===== */}
       <Layout.Body>
-        <div className='flex min-h-screen flex-col bg-[#E3F2FD]'>
+      {/* <div className='flex min-h-screen flex-col bg-[#E3F2FD]'> */}
+        <div className='flex min-h-screen flex-col '>
           <header className='flex items-center justify-between bg-primary text-primary-foreground'></header>
           <main className='flex-grow'>
             <section className='bg-primary px-4 py-20 text-center text-white'>

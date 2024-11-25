@@ -27,7 +27,7 @@ import { Badge } from '@/components/ui/badge'
 import { IconSearch } from '@tabler/icons-react'
 import { Input } from '@/components/ui/input'
 import { Checkbox } from '@/components/ui/checkbox'
-import React from 'react';
+import React from 'react'
 import { Link } from 'react-router-dom'
 
 export default function Journals() {
@@ -36,69 +36,92 @@ export default function Journals() {
   const [sortDirection, setSortDirection] = useState(null)
   const [selectedJournals, setSelectedJournals] = useState([])
   const [journals, setJournals] = useState([])
+  const [articles, setArticles] = useState([])
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
-  const pageSize = 10; // Number of items per page
-//https://aphrc.site/journal_api/journals/search/
+  const pageSize = 10 // Number of items per page
+  //https://aphrc.site/journal_api/journals/search/
 
   // Fetch journals with search and pagination
-  const fetchJournals = async (page = 1) => {
-    const response = await fetch(`https://aphrc.site/journal_api/journals/search/?query=${searchTerm}&page=${page}&page_size=${pageSize}`);
-    const data = await response.json();
-    setJournals(data.results); // Assuming the API returns paginated data
-    setTotalPages(Math.ceil(data.count / pageSize)); // Assuming the API returns total pages
-    //console.log(data.results);
-  };
+
+  // const fetchJournals = async (page = 1) => {
+  //   const response = await fetch(
+  //     `https://aphrc.site/journal_api/journals/search/?query=${searchTerm}&page=${page}&page_size=${pageSize}`
+  //   )
+  //   const data = await response.json()
+  //   setJournals(data.results) // Assuming the API returns paginated data
+  //   setTotalPages(Math.ceil(data.count / pageSize)) // Assuming the API returns total pages
+  //   //console.log(data.results);
+  // }
+
+  // useEffect(() => {
+  //   fetchJournals(currentPage)
+  // }, [searchTerm, currentPage])
+
+  // console.log('Current Page:', currentPage)
+  // console.log('Total Pages:', totalPages)
+
+  // const filteredJournals = useMemo(() => {
+  //   return journals.filter((journal) =>
+  //     Object.values(journal).some((value) =>
+  //       String(value).toLowerCase().includes(searchTerm.toLowerCase())
+  //     )
+  //   )
+  // }, [searchTerm, journals])
+
+  // const sortedJournals = useMemo(() => {
+  //   if (!sortColumn || !sortDirection) return filteredJournals
+  //   return filteredJournals.sort((a, b) => {
+  //     const valueA = a[sortColumn]
+  //     const valueB = b[sortColumn]
+  //     if (valueA < valueB) return sortDirection === 'asc' ? -1 : 1
+  //     if (valueA > valueB) return sortDirection === 'asc' ? 1 : -1
+  //     return 0
+  //   })
+  // }, [filteredJournals, sortColumn, sortDirection])
+
+  // const handleSort = (column: string) => {
+  //   if (sortColumn === column) {
+  //     setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc')
+  //   } else {
+  //     setSortColumn(column)
+  //     setSortDirection('asc')
+  //   }
+  // }
+
+  // const handleSelectJournal = (journal) => {
+  //   if (selectedJournals.includes(journal)) {
+  //     setSelectedJournals(selectedJournals.filter((j) => j !== journal))
+  //   } else {
+  //     setSelectedJournals([...selectedJournals, journal])
+  //   }
+  // }
+
+  // const handlePageChange = (page: number) => {
+  //   setCurrentPage(page)
+  //   fetchJournals(page)
+  // }
+
+   // Fetch articles with search and pagination
+   const fetchArticles = async (page = 1) => {
+    const response = await fetch(
+      `https://aphrc.site/journal_api/api/article/?query=${searchTerm}&page=${page}&page_size=${pageSize}`
+    )
+    const data = await response.json()
+    setArticles(data.results) // Assuming the API returns articles
+    setTotalPages(Math.ceil(data.count / pageSize)) // Assuming the API returns total pages
+  }
 
   useEffect(() => {
-    fetchJournals(currentPage);
-  }, [searchTerm, currentPage]);
+    fetchArticles(currentPage)
+  }, [searchTerm, currentPage])
 
-  console.log('Current Page:', currentPage);
-  console.log('Total Pages:', totalPages);
-  
-
-
-  const filteredJournals = useMemo(() => {
-    return journals.filter((journal) =>
-      Object.values(journal).some((value) =>
-        String(value).toLowerCase().includes(searchTerm.toLowerCase())
-      )
-    )
-  }, [searchTerm, journals])
-
-  const sortedJournals = useMemo(() => {
-    if (!sortColumn || !sortDirection) return filteredJournals
-    return filteredJournals.sort((a, b) => {
-      const valueA = a[sortColumn]
-      const valueB = b[sortColumn]
-      if (valueA < valueB) return sortDirection === 'asc' ? -1 : 1
-      if (valueA > valueB) return sortDirection === 'asc' ? 1 : -1
-      return 0
-    })
-  }, [filteredJournals, sortColumn, sortDirection])
-
-  const handleSort = (column: string) => {
-    if (sortColumn === column) {
-      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc')
-    } else {
-      setSortColumn(column)
-      setSortDirection('asc')
-    }
-  }
-
-  const handleSelectJournal = (journal) => {
-    if (selectedJournals.includes(journal)) {
-      setSelectedJournals(selectedJournals.filter((j) => j !== journal))
-    } else {
-      setSelectedJournals([...selectedJournals, journal])
-    }
-  }
-
+  // Handle page change
   const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-    fetchJournals(page);
+    setCurrentPage(page)
+    fetchArticles(page)
   }
+
 
   return (
     <Layout>
@@ -124,15 +147,15 @@ export default function Journals() {
               <Input
                 type='search'
                 placeholder='Search...'
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                // value={searchTerm}
+                // onChange={(e) => setSearchTerm(e.target.value)}
                 className='block w-full rounded-lg border border-muted bg-background py-2 pl-10 pr-4 text-sm text-foreground focus:border-primary focus:ring-primary'
               />
             </div>
           </div>
           <div className='overflow-x-auto'>
-            <div className='rounded-md border'>
-              <Table>
+            {/* <div className='rounded-md border'> */}
+              {/* <Table>
                 <TableHeader>
                   <TableRow>
                     <TableHead>
@@ -149,9 +172,7 @@ export default function Journals() {
                         }}
                       />
                     </TableHead>
-                    <TableHead
-                      className='cursor-pointer'
-                    >
+                    <TableHead className='cursor-pointer'>
                       Journal Title
                       {sortColumn === 'title' && (
                         <span className='ml-2'>
@@ -159,9 +180,7 @@ export default function Journals() {
                         </span>
                       )}
                     </TableHead>
-                    <TableHead
-                      className='cursor-pointer'
-                    >
+                    <TableHead className='cursor-pointer'>
                       Publisher
                       {sortColumn === 'author' && (
                         <span className='ml-2'>
@@ -169,9 +188,7 @@ export default function Journals() {
                         </span>
                       )}
                     </TableHead>
-                    <TableHead
-                      className='cursor-pointer'
-                    >
+                    <TableHead className='cursor-pointer'>
                       Country
                       {sortColumn === 'category' && (
                         <span className='ml-2'>
@@ -179,9 +196,7 @@ export default function Journals() {
                         </span>
                       )}
                     </TableHead>
-                    <TableHead
-                      className='cursor-pointer'
-                    >
+                    <TableHead className='cursor-pointer'>
                       Platform
                       {sortColumn === 'citationCount' && (
                         <span className='ml-2'>
@@ -189,9 +204,7 @@ export default function Journals() {
                         </span>
                       )}
                     </TableHead>
-                    <TableHead
-                      className='cursor-pointer'
-                    >
+                    <TableHead className='cursor-pointer'>
                       Thematic Area
                       {sortColumn === 'keywords' && (
                         <span className='ml-2'>
@@ -199,9 +212,7 @@ export default function Journals() {
                         </span>
                       )}
                     </TableHead>
-                    <TableHead
-                      className='cursor-pointer'
-                    >
+                    <TableHead className='cursor-pointer'>
                       Published
                       {sortColumn === 'published' && (
                         <span className='ml-2'>
@@ -221,11 +232,34 @@ export default function Journals() {
                           onCheckedChange={() => handleSelectJournal(journal)}
                         />
                       </TableCell>
-                      <TableCell>  <Link to={`/journals/${journal.id}`}>{journal.journal_title?journal.journal_title:"journal title unspecified"}</Link></TableCell>
-                      <TableCell>{journal.publishers_name?journal.publishers_name:"publisher unspecified"}</TableCell>
-                      <TableCell>{journal.country?journal.country.country:"country unspecified"}</TableCell>
-                      <TableCell>{journal.platform?journal.platform.platform:"platform not specified"}</TableCell>
-                      <TableCell>{journal.thematic_area?journal.thematic_area.thematic_area:"thematic area not specified"}</TableCell>
+                      <TableCell>
+                        {' '}
+                        <Link to={`/journals/${journal.id}`}>
+                          {journal.journal_title
+                            ? journal.journal_title
+                            : 'journal title unspecified'}
+                        </Link>
+                      </TableCell>
+                      <TableCell>
+                        {journal.publishers_name
+                          ? journal.publishers_name
+                          : 'publisher unspecified'}
+                      </TableCell>
+                      <TableCell>
+                        {journal.country
+                          ? journal.country.country
+                          : 'country unspecified'}
+                      </TableCell>
+                      <TableCell>
+                        {journal.platform
+                          ? journal.platform.platform
+                          : 'platform not specified'}
+                      </TableCell>
+                      <TableCell>
+                        {journal.thematic_area
+                          ? journal.thematic_area.thematic_area
+                          : 'thematic area not specified'}
+                      </TableCell>
                       <TableCell>
                         {journal.journal_title ? (
                           <Badge variant='outline'>Published</Badge>
@@ -236,101 +270,106 @@ export default function Journals() {
                     </TableRow>
                   ))}
                 </TableBody>
-              </Table>
+              </Table> */}
+              {articles.map((article, index) => (
+                  <h1 key={index}>{article.title}</h1>
+              ))}
+
+
               <Pagination>
-  <PaginationContent>
-    <PaginationItem>
-      <PaginationPrevious
-        href="#"
-        onClick={(event) => {
-          event.preventDefault();
-          if (currentPage > 1) {
-            handlePageChange(currentPage - 1);
-          }
-        }}
-        disabled={currentPage <= 1} // Disable if on the first page
-      />
-    </PaginationItem>
+                <PaginationContent>
+                  <PaginationItem>
+                    <PaginationPrevious
+                      href='#'
+                      onClick={(event) => {
+                        event.preventDefault()
+                        if (currentPage > 1) {
+                          handlePageChange(currentPage - 1)
+                        }
+                      }}
+                      disabled={currentPage <= 1} // Disable if on the first page
+                    />
+                  </PaginationItem>
 
-    {/* Show first page */}
-    {currentPage > 3 && (
-      <>
-        <PaginationItem>
-          <PaginationLink
-            href="#"
-            isActive={currentPage === 1}
-            onClick={(event) => {
-              event.preventDefault();
-              handlePageChange(1);
-            }}
-          >
-            1
-          </PaginationLink>
-        </PaginationItem>
-        <PaginationEllipsis />
-      </>
-    )}
+                  {/* Show first page */}
+                  {currentPage > 3 && (
+                    <>
+                      <PaginationItem>
+                        <PaginationLink
+                          href='#'
+                          isActive={currentPage === 1}
+                          onClick={(event) => {
+                            event.preventDefault()
+                            handlePageChange(1)
+                          }}
+                        >
+                          1
+                        </PaginationLink>
+                      </PaginationItem>
+                      <PaginationEllipsis />
+                    </>
+                  )}
 
-    {/* Show previous, current, and next page neighbors */}
-    {[...Array(totalPages)]
-      .map((_, index) => index + 1)
-      .filter(
-        (page) =>
-          page === 1 || page === totalPages || (page >= currentPage - 2 && page <= currentPage + 2)
-      )
-      .map((page) => (
-        <PaginationItem key={page}>
-          <PaginationLink
-            href="#"
-            isActive={currentPage === page}
-            onClick={(event) => {
-              event.preventDefault();
-              handlePageChange(page);
-            }}
-          >
-            {page}
-          </PaginationLink>
-        </PaginationItem>
-      ))}
+                  {/* Show previous, current, and next page neighbors */}
+                  {[...Array(totalPages)]
+                    .map((_, index) => index + 1)
+                    .filter(
+                      (page) =>
+                        page === 1 ||
+                        page === totalPages ||
+                        (page >= currentPage - 2 && page <= currentPage + 2)
+                    )
+                    .map((page) => (
+                      <PaginationItem key={page}>
+                        <PaginationLink
+                          href='#'
+                          isActive={currentPage === page}
+                          onClick={(event) => {
+                            event.preventDefault()
+                            handlePageChange(page)
+                          }}
+                        >
+                          {page}
+                        </PaginationLink>
+                      </PaginationItem>
+                    ))}
 
-    {/* Show ellipsis before last page */}
-    {currentPage < totalPages - 2 && (
-      <>
-        <PaginationEllipsis />
-        <PaginationItem>
-          <PaginationLink
-            href="#"
-            isActive={currentPage === totalPages}
-            onClick={(event) => {
-              event.preventDefault();
-              handlePageChange(totalPages);
-            }}
-          >
-            {totalPages}
-          </PaginationLink>
-        </PaginationItem>
-      </>
-    )}
+                  {/* Show ellipsis before last page */}
+                  {currentPage < totalPages - 2 && (
+                    <>
+                      <PaginationEllipsis />
+                      <PaginationItem>
+                        <PaginationLink
+                          href='#'
+                          isActive={currentPage === totalPages}
+                          onClick={(event) => {
+                            event.preventDefault()
+                            handlePageChange(totalPages)
+                          }}
+                        >
+                          {totalPages}
+                        </PaginationLink>
+                      </PaginationItem>
+                    </>
+                  )}
 
-    <PaginationItem>
-      <PaginationNext
-        href="#"
-        onClick={(event) => {
-          event.preventDefault();
-          if (currentPage < totalPages) {
-            handlePageChange(currentPage + 1);
-          }
-        }}
-        disabled={currentPage >= totalPages} // Disable if on the last page
-      />
-    </PaginationItem>
-  </PaginationContent>
-</Pagination>
-
-
+                  <PaginationItem>
+                    <PaginationNext
+                      href='#'
+                      onClick={(event) => {
+                        event.preventDefault()
+                        if (currentPage < totalPages) {
+                          handlePageChange(currentPage + 1)
+                        }
+                      }}
+                      disabled={currentPage >= totalPages} // Disable if on the last page
+                    />
+                  </PaginationItem>
+                </PaginationContent>
+              </Pagination>
             </div>
           </div>
-        </div>
+        {/* </div> */}
       </Layout.Body>
     </Layout>
   )

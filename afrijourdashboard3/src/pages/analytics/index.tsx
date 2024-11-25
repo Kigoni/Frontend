@@ -9,6 +9,7 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { Search } from '@/components/search'
+import './components/index.css'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import ThemeSwitch from '@/components/theme-switch'
 import { TopNav } from '@/components/top-nav'
@@ -23,55 +24,40 @@ import {
   TableHead,
   TableHeader,
 } from '@/components/ui/table'
-import {  useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
+import { IconCircleCheck, IconCircleX } from '@tabler/icons-react'
 export default function Analytics() {
   const [journals, setJournals] = useState([])
-  const [selectedCountry, setSelectedCountry] = useState('');
-  const [selectedThematicArea, setSelectedThematicArea] = useState('');
-  const [selectedLanguage, setSelectedLanguage] = useState('');
-  const[selectedDoaj,setSelectedDoaj]=useState('')
-  const[selectedOaj,setSelectedOaj]=useState('')
-  const[selectedAfricanPublisher,setSelectedAfricanPublisher]=useState('')
-  const[selectedInasps,setSelectedInasps]=useState('')
-  const[selectedCope,setCope]=useState('')
-  const[selectedIssn,setIssn]=useState('')
-  const [selectedGoogleScholar, setSelectedGoogleScholar] = useState('');
-  const [selectedScopus, setSelectedScopus] = useState('');
-  // Fetch journals with search and pagination
-  //http://198.211.110.243/journal_api/journals/search/
+  const [selectedCountry, setSelectedCountry] = useState('')
+  const [selectedThematicArea, setSelectedThematicArea] = useState('')
+  const [selectedLanguage, setSelectedLanguage] = useState('')
+  const [selectedDoaj, setSelectedDoaj] = useState('')
+  const [selectedOaj, setSelectedOaj] = useState('')
+  const [selectedAfricanPublisher, setSelectedAfricanPublisher] = useState('')
+  const [selectedInasps, setSelectedInasps] = useState('')
+  const [selectedCope, setCope] = useState('')
+  const [selectedIssn, setIssn] = useState('')
+  const [loading, setLoading] = useState(false)
 
-
-  // const fetchJournals = async () => {
-  //   const response = await fetch(`https://aphrc.site/journal_api/journals/search/`);
-  //   const data = await response.json();
-  //   setJournals(data.results); // Assuming the API returns paginated data
-  //   //setTotalPages(Math.ceil(data.count / pageSize)); // Assuming the API returns total pages
-  //   console.log(data.results);
-  // };
+  // const [selectedGoogleScholar, setSelectedGoogleScholar] = useState('');
+  // const [selectedScopus, setSelectedScopus] = useState('');
+  const [selectedGoogleScholar, setSelectedGoogleScholar] =
+    useState<boolean>(false)
+  const [selectedScopus, setSelectedScopus] = useState<boolean>(false)
 
   // Fetch journals with search URL
-  const fetchJournals = async (url = 'https://aphrc.site/journal_api/journals/search/') => {
-    const response = await fetch(url);
-    const data = await response.json();
-    setJournals(data.results);
-  };
+  const fetchJournals = async (
+    url = 'https://aphrc.site/journal_api/journals/search/'
+  ) => {
+    const response = await fetch(url)
+    const data = await response.json()
+    setJournals(data.results)
+  }
 
   useEffect(() => {
-    fetchJournals();
-  },[journals]);
+    fetchJournals()
+  }, [])
 
-  // Function to handle form submission and updating selected criteria
-  // const handleCriteriaChange = (country: string, thematicArea: string, language: string,doaj:string,oaj:string,ap:string,inasps:string,cope:string,issn:string) => {
-  //   setSelectedCountry(country);
-  //   setSelectedThematicArea(thematicArea);
-  //   setSelectedLanguage(language);
-  //   setSelectedDoaj(doaj);
-  //   setSelectedOaj(oaj);
-  //   setSelectedAfricanPublisher(ap);
-  //   setSelectedInasps(inasps);
-  //   setCope(cope)
-  //   setIssn(issn)
-  // };
   const handleCriteriaChange = (
     country: string,
     thematicArea: string,
@@ -82,59 +68,103 @@ export default function Analytics() {
     inasps: string,
     cope: string,
     issn: string,
-    googleScholar: string,
-    scopus: string
+    googleScholar: boolean,
+    scopus: boolean
+    // googleScholar: string,
+    // scopus: string
   ) => {
-    setSelectedCountry(country);
-    setSelectedThematicArea(thematicArea);
-    setSelectedLanguage(language);
-    setSelectedDoaj(doaj);
-    setSelectedOaj(oaj);
-    setSelectedAfricanPublisher(ap);
-    setSelectedInasps(inasps);
-    setCope(cope);
-    setIssn(issn);
-    setSelectedGoogleScholar(googleScholar);
-    setSelectedScopus(scopus);
-  };
-  
-  const generateSearchUrl = () => {
-    const baseUrl = 'https://aphrc.site/journal_api/journals/search/?';
-    const params = new URLSearchParams();
-  
-    // Boolean filters with "Yes" and "No" interpretation
-    params.append('directory_of_african_journals', selectedDoaj === 'Yes' ? 'true' : 'false');
-    params.append('open_access_journal', selectedOaj === 'Yes' ? 'true' : 'false');
-    params.append('online_publisher_in_africa', selectedAfricanPublisher === 'Yes' ? 'true' : 'false');
-    params.append('hosted_on_INASPS', selectedInasps === 'Yes' ? 'true' : 'false');
-    params.append('member_of_Committee_on_publication_Ethics', selectedCope === 'Yes' ? 'true' : 'false');
-    params.append('Present_on_ISSN', selectedIssn === 'Yes' ? 'true' : 'false');
-    params.append('indexed_on_google_scholar', selectedGoogleScholar === 'Yes' ? 'true' : 'false');
-    params.append('indexed_on_scopus', selectedScopus === 'Yes' ? 'true' : 'false');
-  
-    // Combine country, thematic area, and language into a single query parameter
-    const queryParts = [];
-    if (selectedCountry) queryParts.push(selectedCountry);
-    if (selectedThematicArea) queryParts.push(selectedThematicArea);
-    if (selectedLanguage) queryParts.push(selectedLanguage);
-  
-    if (queryParts.length > 0) {
-      params.append('query', queryParts.join(' ')); // Join with spaces for URL encoding
-    }
-  
-    return baseUrl + params.toString();
-  };
-  
+    setSelectedCountry(country)
+    setSelectedThematicArea(thematicArea)
+    setSelectedLanguage(language)
+    setSelectedDoaj(doaj)
+    setSelectedOaj(oaj)
+    setSelectedAfricanPublisher(ap)
+    setSelectedInasps(inasps)
+    setCope(cope)
+    setIssn(issn)
+    setSelectedGoogleScholar(googleScholar)
+    setSelectedScopus(scopus)
+  }
 
- // Fetch journals based on selected criteria
- const fetchFilteredJournals = async () => {
-  const url = generateSearchUrl();
-  const response = await fetch(url);
-  const data = await response.json();
-  setJournals(data.results);
-  console.log('url:-',url)
-  console.log('data:-',data.results)
-};
+  const generateSearchUrl = () => {
+    const baseUrl = 'https://aphrc.site/journal_api/journals/search/'
+    const params = new URLSearchParams()
+
+    // Boolean filters - add only if selected
+    if (selectedDoaj)
+      params.append(
+        'directory_of_african_journals',
+        selectedDoaj === 'Yes' ? 'true' : 'false'
+      )
+    if (selectedOaj)
+      params.append(
+        'open_access_journal',
+        selectedOaj === 'Yes' ? 'true' : 'false'
+      )
+    if (selectedAfricanPublisher)
+      params.append(
+        'online_publisher_in_africa',
+        selectedAfricanPublisher === 'Yes' ? 'true' : 'false'
+      )
+    if (selectedInasps)
+      params.append(
+        'hosted_on_INASPS',
+        selectedInasps === 'Yes' ? 'true' : 'false'
+      )
+    if (selectedCope)
+      params.append(
+        'member_of_Committee_on_publication_Ethics',
+        selectedCope === 'Yes' ? 'true' : 'false'
+      )
+    if (selectedIssn)
+      params.append(
+        'Present_on_ISSN',
+        selectedIssn === 'Yes' ? 'true' : 'false'
+      )
+    if (selectedGoogleScholar)
+      params.append(
+        'indexed_on_google_scholar',
+        selectedGoogleScholar === true ? 'true' : 'false'
+      )
+    if (selectedScopus)
+      params.append(
+        'indexed_on_scopus',
+        selectedScopus === true ? 'true' : 'false'
+      )
+
+    // Combine selected country, thematic area, and language into a single `query` parameter
+    const queryParts = []
+    if (selectedCountry) queryParts.push(selectedCountry)
+    if (selectedThematicArea) queryParts.push(selectedThematicArea)
+    if (selectedLanguage) queryParts.push(selectedLanguage)
+
+    // Append `query` if there are any parts
+    if (queryParts.length > 0) {
+      const queryValue = queryParts.join(' ') // Join parts with spaces
+      params.append('query', queryValue)
+    }
+
+    // Return the final URL
+    const queryString = params.toString()
+    return queryString ? `${baseUrl}?${queryString}` : baseUrl
+  }
+
+  // Fetch journals based on selected criteria
+  const fetchFilteredJournals = async () => {
+    setLoading(true) // Start loading
+    try {
+      const url = generateSearchUrl()
+      const response = await fetch(url)
+      const data = await response.json()
+      setJournals(data.results)
+      console.log('url:-', url)
+      console.log('data:-', data.results)
+    } catch (error) {
+      console.error('Error fetching filtered journals:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   return (
     <Layout>
@@ -186,46 +216,188 @@ export default function Analytics() {
                       Number (ISSN) Portal Listed on International Standard
                       Serial Number (ISSN) Portal
                     </p> */}
-                     <p className="text-sm text-muted-foreground">
-                      <strong>Country:</strong> {selectedCountry || 'Not selected'}
+                    <p className='flex items-center text-sm text-muted-foreground'>
+                      {selectedCountry ? (
+                        <IconCircleCheck
+                          className='mr-2 text-green-500'
+                          size={24}
+                        />
+                      ) : (
+                        <IconCircleX className='mr-2 text-red-500' size={24} />
+                      )}
+                      <strong>Country:</strong>{' '}
+                      {selectedCountry || 'Not selected'}
                     </p>
-                    <p className="text-sm text-muted-foreground">
-                      <strong>Thematic Area:</strong> {selectedThematicArea || 'Not selected'}
+                    <p className='flex items-center text-sm text-muted-foreground'>
+                      {selectedThematicArea ? (
+                        <IconCircleCheck
+                          className='mr-2 text-green-500'
+                          size={24}
+                        />
+                      ) : (
+                        <IconCircleX className='mr-2 text-red-500' size={24} />
+                      )}
+                      <strong>Thematic Area:</strong>{' '}
+                      {selectedThematicArea || 'Not selected'}
                     </p>
-                    <p className="text-sm text-muted-foreground">
-                      <strong>Language:</strong> {selectedLanguage || 'Not selected'}
+                    <p className='flex items-center text-sm text-muted-foreground'>
+                      {selectedLanguage ? (
+                        <IconCircleCheck
+                          className='mr-2 text-green-500'
+                          size={24}
+                        />
+                      ) : (
+                        <IconCircleX className='mr-2 text-red-500' size={24} />
+                      )}
+                      <strong>Language:</strong>{' '}
+                      {selectedLanguage || 'Not selected'}
                     </p>
-                    <p className="text-sm text-muted-foreground">
-                      <strong>Listed on Directory of Open Access Journal (DOAJ):</strong> {selectedDoaj || 'Not selected'}
+                    <p className='flex items-center text-sm text-muted-foreground'>
+                      {selectedDoaj === 'yes' ? (
+                        <IconCircleCheck
+                          className='mr-2 text-green-500'
+                          size={24}
+                        />
+                      ) : (
+                        <IconCircleX className='mr-2 text-red-500' size={24} />
+                      )}
+                      <strong>
+                        Listed on Directory of Open Access Journal (DOAJ):
+                      </strong>{' '}
+                      {selectedDoaj || 'Not selected'}
                     </p>
-                    <p className="text-sm text-muted-foreground">
-                      <strong>Listed on Open Access Journal (OAJ):</strong> {selectedOaj || 'Not selected'}
+                    <p className='flex items-center text-sm text-muted-foreground'>
+                      {selectedOaj === 'yes' ? (
+                        <IconCircleCheck
+                          className='mr-2 text-green-500'
+                          size={24}
+                        />
+                      ) : (
+                        <IconCircleX className='mr-2 text-red-500' size={24} />
+                      )}
+                      <strong>Listed on Open Access Journal (OAJ):</strong>{' '}
+                      {selectedOaj || 'Not selected'}
                     </p>
-                    <p className="text-sm text-muted-foreground">
-                      <strong>Online Publisher Based in Africa:</strong> {selectedAfricanPublisher || 'Not selected'}
+                    <p className='flex items-center text-sm text-muted-foreground'>
+                      {selectedAfricanPublisher === 'yes' ? (
+                        <IconCircleCheck
+                          className='mr-2 text-green-500'
+                          size={24}
+                        />
+                      ) : (
+                        <IconCircleX className='mr-2 text-red-500' size={24} />
+                      )}
+                      <strong>Online Publisher Based in Africa:</strong>{' '}
+                      {selectedAfricanPublisher || 'Not selected'}
                     </p>
-                    <p className="text-sm text-muted-foreground">
-                      <strong>Hosted on INASP's Journals Online:</strong> {selectedInasps || 'Not selected'}
+                    <p className='flex items-center text-sm text-muted-foreground'>
+                      {selectedInasps === 'yes' ? (
+                        <IconCircleCheck
+                          className='mr-2 text-green-500'
+                          size={24}
+                        />
+                      ) : (
+                        <IconCircleX className='mr-2 text-red-500' size={24} />
+                      )}
+                      <strong>Hosted on INASP's Journals Online:</strong>{' '}
+                      {selectedInasps || 'Not selected'}
                     </p>
-                    <p className="text-sm text-muted-foreground">
-                      <strong>Member of Committee on Publication Ethics (COPE):</strong> {selectedCope || 'Not selected'}
+                    <p className='flex items-center text-sm text-muted-foreground'>
+                      {selectedCope === 'yes' ? (
+                        <IconCircleCheck
+                          className='mr-2 text-green-500'
+                          size={24}
+                        />
+                      ) : (
+                        <IconCircleX className='mr-2 text-red-500' size={24} />
+                      )}
+                      <strong>
+                        Member of Committee on Publication Ethics (COPE):
+                      </strong>{' '}
+                      {selectedCope || 'Not selected'}
                     </p>
-                    <p className="text-sm text-muted-foreground">
-                      <strong>Listed on International Standard Serial Number (ISSN) Portal:</strong> {selectedIssn || 'Not selected'}
+                    <p className='flex items-center text-sm text-muted-foreground'>
+                      {selectedIssn === 'yes' ? (
+                        <IconCircleCheck
+                          className='mr-2 text-green-500'
+                          size={24}
+                        />
+                      ) : (
+                        <IconCircleX className='mr-2 text-red-500' size={24} />
+                      )}
+                      <strong>
+                        Listed on International Standard Serial Number (ISSN)
+                        Portal:
+                      </strong>{' '}
+                      {selectedIssn || 'Not selected'}
                     </p>
-                    <p className="text-sm text-muted-foreground">
-                      <strong>Listed on Google Scholar:</strong> {selectedGoogleScholar || 'Not selected'}
+                    <p className='flex items-center text-sm text-muted-foreground'>
+                      {selectedGoogleScholar === true ? (
+                        <IconCircleCheck
+                          className='mr-2 text-green-500'
+                          size={24}
+                        />
+                      ) : (
+                        <IconCircleX className='mr-2 text-red-500' size={24} />
+                      )}
+                      <strong>Listed on Google Scholar:</strong>{' '}
+                      {selectedGoogleScholar === true
+                        ? 'Selected'
+                        : 'Not Selected'}
                     </p>
-                    <p className="text-sm text-muted-foreground">
-                      <strong>Listed on Scopus:</strong> {selectedScopus || 'Not selected'}
+                    <p className='flex items-center text-sm text-muted-foreground'>
+                      {selectedScopus === true ? (
+                        <IconCircleCheck
+                          className='mr-2 text-green-500'
+                          size={24}
+                        />
+                      ) : (
+                        <IconCircleX className='mr-2 text-red-500' size={24} />
+                      )}
+                      <strong>Listed on Scopus:</strong>{' '}
+                      {selectedScopus === true ? 'Selected' : 'Not Selected'}
                     </p>
                     {/* <button
-                    // onClick={generateSearchUrl}
-                    className="mt-4 px-4 py-2 bg-blue-600 text-white rounded"
-                  >
-                    Search Journals
-                  </button> */}
-                  <button onClick={fetchFilteredJournals}>Search Journals</button>
+                      onClick={fetchFilteredJournals}
+                      className='mt-4 rounded bg-blue-900 px-4 py-2 text-white'
+                    >
+                      Search Now
+                    </button> */}
+                    {/* {!loading ? (
+          <button
+            onClick={fetchFilteredJournals}
+            className="mt-4  rounded bg-blue-900 px-4 py-2 text-white"
+          >
+            Search Now
+          </button>
+        ) : (
+          <div className=" mt-4 px-4 py-2 h-6 w-6 animate-spin rounded-full border-2 border-blue-900 border-t-transparent"></div>
+        )} */}
+                    {/* {!loading ? (
+  <button
+    onClick={fetchFilteredJournals}
+    className="mt-4 rounded bg-blue-900 px-4 py-2 text-white hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+    disabled={loading} // Disable the button while loading
+  >
+    Search Now
+  </button>
+) : (
+<div className="loader"></div>
+  
+)} */}
+                    <div className='mt-4 flex items-center justify-center'>
+                      {!loading ? (
+                        <button
+                          onClick={fetchFilteredJournals}
+                          className='rounded bg-blue-900 px-4 py-2 text-white hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500'
+                          disabled={loading} // Disable the button while loading
+                        >
+                          Search Now
+                        </button>
+                      ) : (
+                        <div className='loader'></div>
+                      )}
+                    </div>
                   </div>
                 </CardContent>
               </Card>
@@ -247,64 +419,27 @@ export default function Analytics() {
                         </TableRow>
                       </TableHeader>
                       <TableBody>
-                      {journals.map((journal, index) => (
-                        <TableRow key={index}>
-                        
-                          <TableCell>{journal.journal_title?journal.journal_title:"journal title unspecified"}</TableCell>
-                          <TableCell>{journal.publishers_name?journal.publishers_name:"publisher unspecified"}</TableCell>
-                          <TableCell>{journal.thematic_area?journal.thematic_area.thematic_area:"thematic area not specified"}</TableCell>
-                          {/* <TableCell>25</TableCell>
+                        {journals.map((journal, index) => (
+                          <TableRow key={index}>
+                            <TableCell>
+                              {journal.journal_title
+                                ? journal.journal_title
+                                : 'journal title unspecified'}
+                            </TableCell>
+                            <TableCell>
+                              {journal.publishers_name
+                                ? journal.publishers_name
+                                : 'publisher unspecified'}
+                            </TableCell>
+                            <TableCell>
+                              {journal.thematic_area
+                                ? journal.thematic_area.thematic_area
+                                : 'thematic area not specified'}
+                            </TableCell>
+                            {/* <TableCell>25</TableCell>
                           <TableCell>Yes</TableCell> */}
-                        </TableRow>))}
-                        {/* <TableRow>
-                          <TableCell>Journal 2</TableCell>
-                          <TableCell>Author 2</TableCell>
-                          <TableCell>Medicine</TableCell>
-                          <TableCell>42</TableCell>
-                          <TableCell>Yes</TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell>Journal 3</TableCell>
-                          <TableCell>Author 3</TableCell>
-                          <TableCell>Psychology</TableCell>
-                          <TableCell>18</TableCell>
-                          <TableCell>Yes</TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell>Journal 4</TableCell>
-                          <TableCell>Author 4</TableCell>
-                          <TableCell>Engineering</TableCell>
-                          <TableCell>36</TableCell>
-                          <TableCell>Yes</TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell>Journal 5</TableCell>
-                          <TableCell>Author 5</TableCell>
-                          <TableCell>Economics</TableCell>
-                          <TableCell>30</TableCell>
-                          <TableCell>Yes</TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell>Journal 6</TableCell>
-                          <TableCell>Author 6</TableCell>
-                          <TableCell>Education</TableCell>
-                          <TableCell>22</TableCell>
-                          <TableCell>Yes</TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell>Journal 7</TableCell>
-                          <TableCell>Author 7</TableCell>
-                          <TableCell>History</TableCell>
-                          <TableCell>14</TableCell>
-                          <TableCell>Yes</TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell>Journal 8</TableCell>
-                          <TableCell>Author 8</TableCell>
-                          <TableCell>Environmental Science</TableCell>
-                          <TableCell>28</TableCell>
-                          <TableCell>Yes</TableCell>
-                        </TableRow> */}
+                          </TableRow>
+                        ))}
                       </TableBody>
                     </Table>
                   </CardContent>
@@ -343,19 +478,4 @@ const topNav = [
     href: 'dashboard/overview',
     isActive: true,
   },
-  // {
-  //   title: 'Customers',
-  //   href: 'dashboard/customers',
-  //   isActive: false,
-  // },
-  // {
-  //   title: 'Products',
-  //   href: 'dashboard/products',
-  //   isActive: false,
-  // },
-  // {
-  //   title: 'Settings',
-  //   href: 'dashboard/settings',
-  //   isActive: false,
-  // },
 ]
