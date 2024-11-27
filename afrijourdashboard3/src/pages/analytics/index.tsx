@@ -26,6 +26,7 @@ import {
 } from '@/components/ui/table'
 import { useState, useEffect } from 'react'
 import { IconCircleCheck, IconCircleX } from '@tabler/icons-react'
+import { Link } from 'react-router-dom'
 export default function Analytics() {
   const [journals, setJournals] = useState([])
   const [selectedCountry, setSelectedCountry] = useState('')
@@ -422,9 +423,10 @@ export default function Analytics() {
                         {journals.map((journal, index) => (
                           <TableRow key={index}>
                             <TableCell>
+                            <Link to={`/journals/${journal.id}`}>
                               {journal.journal_title
                                 ? journal.journal_title
-                                : 'journal title unspecified'}
+                                : 'journal title unspecified'} </Link>
                             </TableCell>
                             <TableCell>
                               {journal.publishers_name

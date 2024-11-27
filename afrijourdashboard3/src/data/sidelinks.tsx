@@ -1,23 +1,23 @@
 import {
-  IconBarrierBlock,
+  // IconBarrierBlock,
   IconChartHistogram,
-  IconError404,
-  IconExclamationCircle,
-  IconHexagonNumber1,
-  IconHexagonNumber2,
-  IconHexagonNumber3,
-  IconHexagonNumber4,
-  IconHexagonNumber5,
+  // IconError404,
+  // IconExclamationCircle,
+  // IconHexagonNumber1,
+  // IconHexagonNumber2,
+  // IconHexagonNumber3,
+  // IconHexagonNumber4,
+  // IconHexagonNumber5,
   IconLayoutDashboard,
-  IconServerOff,
+  // IconServerOff,
   IconSettings,
-  IconUserShield,
-  IconLock,
+  // IconUserShield,
+  // IconLock,
   IconBook,
   // IconMessage,
   IconNews,
-  IconList,
-  IconDatabase,
+  // IconList,
+  // IconDatabase,
   IconHome,
 } from '@tabler/icons-react'
 import { IconWorldUpload } from '@tabler/icons-react';
@@ -77,24 +77,24 @@ export const sidelinks: SideLink[] = [
     icon: <IconChartHistogram size={18} />,
   },
   {
-    title: 'Journals',
+    title: 'Articles',
     label: '',
     href: '/journals',
     icon: <IconBook size={18} />,
   },
-  {
-    title: 'Indexes',
-    label: '',
-    href: '/indexes',
-    icon: <IconList size={18} />,
-  },
+  // {
+  //   title: 'Indexes',
+  //   label: '',
+  //   href: '/indexes',
+  //   icon: <IconList size={18} />,
+  // },
 
-  {
-    title: 'respositories',
-    label: '',
-    href: '/repositories',
-    icon: <IconDatabase size={18} />,
-  },
+  // {
+  //   title: 'respositories',
+  //   label: '',
+  //   href: '/repositories',
+  //   icon: <IconDatabase size={18} />,
+  // },
 
   // {
   //   title: 'Reviewers',
@@ -111,7 +111,7 @@ export const sidelinks: SideLink[] = [
   {
     title: 'News & Updates',
     label: '',
-    href: '/users',
+    href: '/news',
     icon: <IconNews size={18} />,
   },
 
@@ -142,77 +142,78 @@ export const sidelinks: SideLink[] = [
   //     },
   //   ],
   // },
-  {
-    title: 'Authentication',
-    label: '',
-    href: '',
-    icon: <IconUserShield size={18} />,
-    sub: [
-      {
-        title: 'Sign In (email + password)',
-        label: '',
-        href: '/sign-in',
-        icon: <IconHexagonNumber1 size={18} />,
-      },
-      {
-        title: 'Sign In (Box)',
-        label: '',
-        href: '/sign-in-2',
-        icon: <IconHexagonNumber2 size={18} />,
-      },
-      {
-        title: 'Sign Up',
-        label: '',
-        href: '/sign-up',
-        icon: <IconHexagonNumber3 size={18} />,
-      },
-      {
-        title: 'Forgot Password',
-        label: '',
-        href: '/forgot-password',
-        icon: <IconHexagonNumber4 size={18} />,
-      },
-      {
-        title: 'OTP',
-        label: '',
-        href: '/otp',
-        icon: <IconHexagonNumber5 size={18} />,
-      },
-    ],
-  },
 
-  {
-    title: 'Error Pages',
-    label: '',
-    href: '',
-    icon: <IconExclamationCircle size={18} />,
-    sub: [
-      {
-        title: 'Not Found',
-        label: '',
-        href: '/404',
-        icon: <IconError404 size={18} />,
-      },
-      {
-        title: 'Internal Server Error',
-        label: '',
-        href: '/500',
-        icon: <IconServerOff size={18} />,
-      },
-      {
-        title: 'Maintenance Error',
-        label: '',
-        href: '/503',
-        icon: <IconBarrierBlock size={18} />,
-      },
-      {
-        title: 'Unauthorised Error',
-        label: '',
-        href: '/401',
-        icon: <IconLock size={18} />,
-      },
-    ],
-  },
+  // {
+  //   title: 'Authentication',
+  //   label: '',
+  //   href: '',
+  //   icon: <IconUserShield size={18} />,
+  //   sub: [
+  //     {
+  //       title: 'Sign In (email + password)',
+  //       label: '',
+  //       href: '/sign-in',
+  //       icon: <IconHexagonNumber1 size={18} />,
+  //     },
+  //     {
+  //       title: 'Sign In (Box)',
+  //       label: '',
+  //       href: '/sign-in-2',
+  //       icon: <IconHexagonNumber2 size={18} />,
+  //     },
+  //     {
+  //       title: 'Sign Up',
+  //       label: '',
+  //       href: '/sign-up',
+  //       icon: <IconHexagonNumber3 size={18} />,
+  //     },
+  //     {
+  //       title: 'Forgot Password',
+  //       label: '',
+  //       href: '/forgot-password',
+  //       icon: <IconHexagonNumber4 size={18} />,
+  //     },
+  //     {
+  //       title: 'OTP',
+  //       label: '',
+  //       href: '/otp',
+  //       icon: <IconHexagonNumber5 size={18} />,
+  //     },
+  //   ],
+  // },
+
+  // {
+  //   title: 'Error Pages',
+  //   label: '',
+  //   href: '',
+  //   icon: <IconExclamationCircle size={18} />,
+  //   sub: [
+  //     {
+  //       title: 'Not Found',
+  //       label: '',
+  //       href: '/404',
+  //       icon: <IconError404 size={18} />,
+  //     },
+  //     {
+  //       title: 'Internal Server Error',
+  //       label: '',
+  //       href: '/500',
+  //       icon: <IconServerOff size={18} />,
+  //     },
+  //     {
+  //       title: 'Maintenance Error',
+  //       label: '',
+  //       href: '/503',
+  //       icon: <IconBarrierBlock size={18} />,
+  //     },
+  //     {
+  //       title: 'Unauthorised Error',
+  //       label: '',
+  //       href: '/401',
+  //       icon: <IconLock size={18} />,
+  //     },
+  //   ],
+  // },
   {
     title: 'Settings',
     label: '',
