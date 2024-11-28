@@ -1,6 +1,6 @@
-import { Layout } from '@/components/custom/layout'
-import { Input } from '@/components/ui/input'
-import { IconSearch, IconFilter, IconRefresh } from '@tabler/icons-react'
+import { Layout } from '@/components/custom/layout';
+import { Input } from '@/components/ui/input';
+import { IconSearch, IconFilter, IconRefresh } from '@tabler/icons-react';
 import {
   Pagination,
   PaginationContent,
@@ -9,10 +9,10 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from '@/components/ui/pagination'
-import { useState, useEffect } from 'react'
-import { ArticleCard } from '@/components/articles/ArticleCard'
-import { FilterPanel } from '@/components/filters/FilterPanel'
+} from '@/components/ui/pagination';
+import { useState, useEffect } from 'react';
+import { ArticleCard } from '@/components/articles/ArticleCard';
+import { FilterPanel } from '@/components/filters/FilterPanel';
 
 interface Article {
   title: string;
@@ -48,7 +48,7 @@ export default function Journals() {
   const [countries, setCountries] = useState<Country[]>([]);
   const [thematicAreas, setThematicAreas] = useState<ThematicArea[]>([]);
   const [languages, setLanguages] = useState<Language[]>([]);
-  
+
   const [selectedCountries, setSelectedCountries] = useState<number[]>([]);
   const [selectedThematicAreas, setSelectedThematicAreas] = useState<number[]>([]);
   const [selectedLanguages, setSelectedLanguages] = useState<number[]>([]);
@@ -59,35 +59,38 @@ export default function Journals() {
         `https://aphrc.site/journal_api/articles/search/?query=${searchTerm}&page=${page}&page_size=${pageSize}`
       );
       const data = await response.json();
-      // Assuming the API now returns abstracts. If not, you'll need to modify this
-      setArticles(data.results.map((article: any) => ({
-        ...article,
-        abstract: article.abstract || 'Abstract not available. This is a placeholder text that would normally contain 2-3 sentences describing the main points of the research article.',
-      })));
+      setArticles(
+        data.results.map((article: any) => ({
+          ...article,
+          abstract:
+            article.abstract ||
+            'Abstract not available. This is a placeholder text that would normally contain 2-3 sentences describing the main points of the research article.',
+        }))
+      );
       setTotalPages(Math.ceil(data.count / pageSize));
     } catch (error) {
       console.error('Error fetching articles:', error);
     }
   };
 
+  const fetchFiltersData = async () => {
+    try {
+      const [countriesRes, thematicRes, languagesRes] = await Promise.all([
+        fetch('https://aphrc.site/journal_api/api/country/'),
+        fetch('https://aphrc.site/journal_api/api/thematic/'),
+        fetch('https://aphrc.site/journal_api/api/languages/'),
+      ]);
+
+      setCountries(await countriesRes.json());
+      setThematicAreas(await thematicRes.json());
+      setLanguages(await languagesRes.json());
+    } catch (error) {
+      console.error('Error fetching filter data:', error);
+    }
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [countriesRes, thematicRes, languagesRes] = await Promise.all([
-          fetch('https://aphrc.site/journal_api/api/country/'),
-          fetch('https://aphrc.site/journal_api/api/thematic/'),
-          fetch('https://aphrc.site/journal_api/api/languages/'),
-        ]);
-
-        setCountries(await countriesRes.json());
-        setThematicAreas(await thematicRes.json());
-        setLanguages(await languagesRes.json());
-      } catch (error) {
-        console.error('Error fetching filter data:', error);
-      }
-    };
-
-    fetchData();
+    fetchFiltersData();
     fetchArticles(currentPage);
   }, [searchTerm, currentPage]);
 
@@ -97,20 +100,20 @@ export default function Journals() {
   };
 
   const handleCountryChange = (id: number) => {
-    setSelectedCountries(prev =>
-      prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]
+    setSelectedCountries((prev) =>
+      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
     );
   };
 
   const handleThematicAreaChange = (id: number) => {
-    setSelectedThematicAreas(prev =>
-      prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]
+    setSelectedThematicAreas((prev) =>
+      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
     );
   };
 
   const handleLanguageChange = (id: number) => {
-    setSelectedLanguages(prev =>
-      prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]
+    setSelectedLanguages((prev) =>
+      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
     );
   };
 
@@ -122,61 +125,65 @@ export default function Journals() {
   return (
     <Layout>
       <Layout.Body>
-        <div className='p-4 md:p-6'>
-          <div className='mb-4 flex items-center'>
-            <div className='relative w-full'>
+        <div className="p-4 md:p-6">
+          <div className="mb-4 flex items-center justify-between ">
+            <div className="relative w-full ">
               <Input
-                type='search'
-                placeholder='Search...'
+                type="search"
+                placeholder="Search..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className='block w-full rounded-lg border border-muted bg-background py-2 pl-10 pr-4 text-sm text-foreground focus:border-primary focus:ring-primary'
+                className="block w-full rounded-lg border border-mutedpy-2 pl-10 pr-4 text-sm text-foreground focus:border-primary focus:ring-primary bg-white"
               />
-
-              <div className='absolute inset-y-0 right-0 flex items-center space-x-3 pr-3'>
+              <div className="absolute inset-y-0 right-0 flex items-center space-x-3 pr-3">
                 <IconRefresh
-                  className='h-5 w-5 cursor-pointer text-muted-foreground hover:text-primary'
+                  className="h-5 w-5 cursor-pointer text-muted-foreground hover:text-primary"
                   onClick={() => fetchArticles(currentPage)}
                 />
                 <IconFilter
-                  className='h-5 w-5 cursor-pointer text-muted-foreground hover:text-primary'
-                  onClick={() => setShowFilterForm(!showFilterForm)}
+                  className="h-5 w-5 cursor-pointer text-muted-foreground hover:text-primary"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setShowFilterForm((prev) => !prev);
+                  }}
                 />
                 <IconSearch
-                  className='h-5 w-5 cursor-pointer text-muted-foreground hover:text-primary'
+                  className="h-5 w-5 cursor-pointer text-muted-foreground hover:text-primary"
                   onClick={() => fetchArticles(1)}
                 />
               </div>
             </div>
           </div>
 
-          <FilterPanel
-            showFilterForm={showFilterForm}
-            toggleFilterForm={() => setShowFilterForm(!showFilterForm)}
-            countries={countries}
-            thematicAreas={thematicAreas}
-            languages={languages}
-            selectedCountries={selectedCountries}
-            selectedThematicAreas={selectedThematicAreas}
-            selectedLanguages={selectedLanguages}
-            onCountryChange={handleCountryChange}
-            onThematicAreaChange={handleThematicAreaChange}
-            onLanguageChange={handleLanguageChange}
-            onApplyFilter={handleApplyFilter}
-          />
+          {showFilterForm && (
+            <FilterPanel
+              showFilterForm={showFilterForm}
+              toggleFilterForm={() => setShowFilterForm(false)}
+              countries={countries}
+              thematicAreas={thematicAreas}
+              languages={languages}
+              selectedCountries={selectedCountries.map(String)}
+              selectedThematicAreas={selectedThematicAreas.map(String)}
+              selectedLanguages={selectedLanguages.map(String)}
+              onCountryChange={(value) => handleCountryChange(Number(value))}
+              onThematicAreaChange={(value) => handleThematicAreaChange(Number(value))}
+              onLanguageChange={(value) => handleLanguageChange(Number(value))}
+              onApplyFilter={handleApplyFilter}
+            />
+          )}
 
-          <div className='space-y-6'>
+          <div className="space-y-6">
             {articles.map((article, index) => (
               <ArticleCard key={index} article={article} />
             ))}
           </div>
 
-          <div className='mt-6'>
+          <div className="mt-6 ">
             <Pagination>
               <PaginationContent>
                 <PaginationItem>
                   <PaginationPrevious
-                    href='#'
+                    href="#"
                     onClick={(e) => {
                       e.preventDefault();
                       if (currentPage > 1) handlePageChange(currentPage - 1);
@@ -184,12 +191,11 @@ export default function Journals() {
                     aria-disabled={currentPage <= 1}
                   />
                 </PaginationItem>
-
                 {currentPage > 3 && (
                   <>
                     <PaginationItem>
                       <PaginationLink
-                        href='#'
+                        href="#"
                         isActive={currentPage === 1}
                         onClick={(e) => {
                           e.preventDefault();
@@ -202,7 +208,6 @@ export default function Journals() {
                     <PaginationEllipsis />
                   </>
                 )}
-
                 {[...Array(totalPages)]
                   .map((_, index) => index + 1)
                   .filter(
@@ -214,7 +219,7 @@ export default function Journals() {
                   .map((page) => (
                     <PaginationItem key={page}>
                       <PaginationLink
-                        href='#'
+                        href="#"
                         isActive={currentPage === page}
                         onClick={(e) => {
                           e.preventDefault();
@@ -225,13 +230,12 @@ export default function Journals() {
                       </PaginationLink>
                     </PaginationItem>
                   ))}
-
                 {currentPage < totalPages - 2 && (
                   <>
                     <PaginationEllipsis />
                     <PaginationItem>
                       <PaginationLink
-                        href='#'
+                        href="#"
                         isActive={currentPage === totalPages}
                         onClick={(e) => {
                           e.preventDefault();
@@ -243,10 +247,9 @@ export default function Journals() {
                     </PaginationItem>
                   </>
                 )}
-
                 <PaginationItem>
                   <PaginationNext
-                    href='#'
+                    href="#"
                     onClick={(e) => {
                       e.preventDefault();
                       if (currentPage < totalPages) handlePageChange(currentPage + 1);

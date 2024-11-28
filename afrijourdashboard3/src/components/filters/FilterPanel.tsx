@@ -1,20 +1,5 @@
-import React from 'react';
-import { FilterGroup } from './FilterGroup';
-
-interface FilterPanelProps {
-  showFilterForm: boolean;
-  toggleFilterForm: () => void;
-  countries: any[];
-  thematicAreas: any[];
-  languages: any[];
-  selectedCountries: number[];
-  selectedThematicAreas: number[];
-  selectedLanguages: number[];
-  onCountryChange: (id: number) => void;
-  onThematicAreaChange: (id: number) => void;
-  onLanguageChange: (id: number) => void;
-  onApplyFilter: () => void;
-}
+import { FilterGroup } from "./FilterGroup";
+import { useEffect, useRef } from "react";
 
 export const FilterPanel = ({
   showFilterForm,
@@ -29,19 +14,64 @@ export const FilterPanel = ({
   onThematicAreaChange,
   onLanguageChange,
   onApplyFilter,
+<<<<<<< HEAD
 }: FilterPanelProps) => {
   // Prevent the panel from closing when interacting inside it
   const handlePanelClick = (e: React.MouseEvent) => {
     e.stopPropagation(); // Prevent the click from affecting the parent toggle button
   };
+=======
+}: {
+  showFilterForm: boolean;
+  toggleFilterForm: () => void;
+  countries: any[];
+  thematicAreas: any[];
+  languages: any[];
+  selectedCountries: string[];
+  selectedThematicAreas: string[];
+  selectedLanguages: string[];
+  onCountryChange: (value: string) => void;
+  onThematicAreaChange: (value: string) => void;
+  onLanguageChange: (value: string) => void;
+  onApplyFilter: () => void;
+}) => {
+  const filterPanelRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        filterPanelRef.current &&
+        !filterPanelRef.current.contains(event.target as Node)
+      ) {
+        toggleFilterForm();
+      }
+    };
+
+    if (showFilterForm) {
+      document.addEventListener('mousedown', handleClickOutside);
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showFilterForm, toggleFilterForm]);
+>>>>>>> pr-2
 
   return (
     <div
+      ref={filterPanelRef}
       className={`fixed left-0 top-0 h-full transform bg-white p-4 shadow-lg transition-transform ${
-        showFilterForm ? 'translate-x-0' : '-translate-x-full'
+        showFilterForm ? "translate-x-0" : "-translate-x-full"
       }`}
+<<<<<<< HEAD
       style={{ width: '300px', zIndex: 50 }}
       onClick={handlePanelClick} // Stop propagation when inside the filter panel
+=======
+      style={{ width: "300px", zIndex: 50 }}
+      onClick={(e) => e.stopPropagation()} // Prevent click events from propagating
+>>>>>>> pr-2
     >
       <div className="flex justify-between items-center mb-4">
         <h3 className="text-lg font-semibold">Filter Options</h3>
@@ -64,24 +94,26 @@ export const FilterPanel = ({
             title="Countries"
             items={countries}
             labelKey="country"
-            selectedItems={selectedCountries}
-            onItemChange={onCountryChange}
+            selectedItems={selectedCountries.map(Number)}
+            onItemChange={(id: number) => onCountryChange(id.toString())}
           />
 
           <FilterGroup
             title="Thematic Areas"
             items={thematicAreas}
             labelKey="thematic_area"
-            selectedItems={selectedThematicAreas}
-            onItemChange={onThematicAreaChange}
+            selectedItems={selectedThematicAreas.map(Number)}
+            onItemChange={(id: number) =>
+              onThematicAreaChange(id.toString())
+            }
           />
 
           <FilterGroup
             title="Languages"
             items={languages}
             labelKey="language"
-            selectedItems={selectedLanguages}
-            onItemChange={onLanguageChange}
+            selectedItems={selectedLanguages.map(Number)}
+            onItemChange={(id: number) => onLanguageChange(id.toString())}
           />
 
           <button
