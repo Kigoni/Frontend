@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { IconUsers, IconQuote, IconFileText } from '@tabler/icons-react';
 
 interface ArticleCardProps {
