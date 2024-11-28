@@ -30,28 +30,36 @@ export const FilterPanel = ({
   onLanguageChange,
   onApplyFilter,
 }: FilterPanelProps) => {
+  // Prevent the panel from closing when interacting inside it
+  const handlePanelClick = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent the click from affecting the parent toggle button
+  };
+
   return (
     <div
       className={`fixed left-0 top-0 h-full transform bg-white p-4 shadow-lg transition-transform ${
         showFilterForm ? 'translate-x-0' : '-translate-x-full'
       }`}
       style={{ width: '300px', zIndex: 50 }}
+      onClick={handlePanelClick} // Stop propagation when inside the filter panel
     >
       <div className="flex justify-between items-center mb-4">
         <h3 className="text-lg font-semibold">Filter Options</h3>
         <button
           className="text-red-500 hover:text-red-700"
-          onClick={toggleFilterForm}
+          onClick={toggleFilterForm} // Only this button should toggle visibility
         >
           Close
         </button>
       </div>
 
       <div className="max-h-[calc(100vh-150px)] overflow-y-auto">
-        <form onSubmit={(e) => {
-          e.preventDefault();
-          onApplyFilter();
-        }}>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            onApplyFilter();
+          }}
+        >
           <FilterGroup
             title="Countries"
             items={countries}
@@ -86,4 +94,4 @@ export const FilterPanel = ({
       </div>
     </div>
   );
-}
+};
