@@ -65,13 +65,13 @@ export default function NewsUpdates() {
   return (
     <Layout>
       <Layout.Header className="relative min-h-[25vh] flex items-center justify-center">
-        <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-primary/5 -z-10" />
-        <div className="max-w-7xl mx-auto px-4 py-12 space-y-6">
+        <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-primary/5 -z-10 bg-[#AFEEEE]" />
+        <div className="max-w-7xl mx-auto px-4 py-12 space-y-6 bg-gray-{shade}">
           <div className="max-w-4xl mx-auto text-center space-y-4">
             <motion.h1 
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="text-5xl font-bold bg-gradient-to-r from-[#4969a3] to-[#495b7a] bg-clip-text text-transparent leading-tight"
+              className="text-5xl font-bold bg-gradient-to-r from-[#412c9e] to-[#080808] font-bold bg-clip-text text-transparent leading-tight"
             >
               Afrika Journals News & Updates
             </motion.h1>
@@ -79,7 +79,7 @@ export default function NewsUpdates() {
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed"
+              className="text-black font-bold text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed"
             >
               Stay informed with the latest developments in African academic publishing,
               research opportunities, and scholarly achievements.
