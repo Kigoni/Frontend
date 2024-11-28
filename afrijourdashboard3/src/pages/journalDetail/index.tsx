@@ -8,16 +8,22 @@ import { JournalMetrics } from '@/components/JournalMetrics';
 import { JournalMetadata } from '@/components/JournalMetadata';
 import { VolumeList } from '@/components/VolumeList';
 
+interface Volume {
+  title: string;
+}
+
+interface Image {
+  id: number;
+  image: string;
+  description: string;
+}
+
 interface Journal {
   journal_title?: string;
   summary?: string;
-  image?: {
-    id: number;
-    image: string;
-    description: string;
-  };
+  image?: Image;
   link?: string;
-  volumes?: any[];
+  volumes?: Volume[];
   open_access_journal?: boolean;
   listed_in_doaj?: boolean;
   publisher_in_cope?: boolean;
@@ -39,32 +45,44 @@ interface Journal {
 export default function JournalDetail() {
   const { journalId } = useParams();
   const [journal, setJournal] = useState<Journal | null>(null);
-  const [imageError, setImageError] = useState(false);
-  const [imageLoaded, setImageLoaded] = useState(false);
+  const [imageStatus, setImageStatus] = useState<'loading' | 'error' | 'loaded'>('loading');
 
   useEffect(() => {
     const fetchJournal = async () => {
       try {
         const response = await fetch(`https://aphrc.site/journal_api/api/journals/${journalId}/`);
         if (!response.ok) throw new Error('Failed to fetch journal data');
-        const data = await response.json();
+        const data: Journal = await response.json();
+
+        if (data.volumes) {
+          data.volumes.sort((a, b) => {
+            const parseVolumeInfo = (title: string) => {
+              const match = title.match(/Volume\s(\d+)\s\(Issue\s(\d+),\s(\d{4})\)/);
+              if (!match) return { volumeNo: 0, issueNo: 0, year: 0 };
+              const [, volumeNo, issueNo, year] = match.map(Number);
+              return { volumeNo, issueNo, year };
+            };
+
+            const volA = parseVolumeInfo(a.title || '');
+            const volB = parseVolumeInfo(b.title || '');
+
+            if (volA.year !== volB.year) return volB.year - volA.year;
+            if (volA.volumeNo !== volB.volumeNo) return volB.volumeNo - volA.volumeNo;
+            return volB.issueNo - volA.issueNo;
+          });
+        }
+
         setJournal(data);
-        // Reset image states when new journal data is loaded
-        setImageError(false);
-        setImageLoaded(false);
       } catch (error) {
         console.error('Error fetching journal:', error);
       }
     };
+
     fetchJournal();
   }, [journalId]);
 
-  // Function to get the correct image URL
-  const getImageUrl = (imagePath: string) => {
-    // Remove any leading slashes to prevent double slashes in the URL
-    const cleanPath = imagePath.startsWith('/') ? imagePath.slice(1) : imagePath;
-    return `https://aphrc.site/${cleanPath}`;
-  };
+  const getImageUrl = (imagePath: string) =>
+    imagePath.startsWith('/') ? `https://aphrc.site${imagePath}` : `https://aphrc.site/${imagePath}`;
 
   if (!journal) {
     return (
@@ -92,35 +110,35 @@ export default function JournalDetail() {
             <div className="rounded-xl bg-[#BFEFFF] p-6 shadow-lg">
               <div className="flex flex-col lg:flex-row gap-8">
                 <div className="lg:w-1/3">
-                  {journal.image && (
-                    <div className="relative aspect-[3/4] w-full overflow-hidden rounded-lg bg-white shadow-md">
-                      <img
-                        src={getImageUrl(journal.image.image)}
-                        alt={journal.image.description || 'Journal cover'}
-                        className={`h-full w-full object-contain transition-opacity duration-300 ${
-                          imageLoaded ? 'opacity-100' : 'opacity-0'
-                        }`}
-                        onLoad={() => {
-                          console.log('Image loaded successfully');
-                          setImageLoaded(true);
-                        }}
-                        onError={(e) => {
-                          console.error('Image failed to load:', e);
-                          setImageError(true);
-                        }}
-                      />
-                      {!imageLoaded && !imageError && (
-                        <div className="absolute inset-0 flex items-center justify-center">
-                          <div className="h-8 w-8 animate-spin rounded-full border-4 border-blue-500 border-t-transparent"></div>
-                        </div>
-                      )}
-                      {imageError && (
-                        <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
-                          <span className="text-gray-400">Image not available</span>
-                        </div>
-                      )}
-                    </div>
-                  )}
+                  <div className="relative aspect-[3/4] w-full overflow-hidden rounded-lg bg-white shadow-md">
+                    {journal.image ? (
+                      <>
+                        <img
+                          src={getImageUrl(journal.image.image)}
+                          alt={journal.image.description || 'Journal cover'}
+                          className={`h-full w-full object-contain transition-opacity duration-300 ${
+                            imageStatus === 'loaded' ? 'opacity-100' : 'opacity-0'
+                          }`}
+                          onLoad={() => setImageStatus('loaded')}
+                          onError={() => setImageStatus('error')}
+                        />
+                        {imageStatus === 'loading' && (
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            <div className="h-8 w-8 animate-spin rounded-full border-4 border-blue-500 border-t-transparent"></div>
+                          </div>
+                        )}
+                        {imageStatus === 'error' && (
+                          <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
+                            <span className="text-gray-400">Image not available</span>
+                          </div>
+                        )}
+                      </>
+                    ) : (
+                      <div className="aspect-[3/4] w-full rounded-lg bg-gray-200 flex items-center justify-center">
+                        <span className="text-gray-500">No image available</span>
+                      </div>
+                    )}
+                  </div>
                 </div>
                 <div className="flex-1 space-y-6">
                   <div>
