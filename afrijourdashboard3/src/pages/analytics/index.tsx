@@ -27,9 +27,13 @@ export default function Analytics() {
   })
 
   const fetchJournals = async (url = 'https://aphrc.site/journal_api/journals/search/') => {
-    const response = await fetch(url)
-    const data = await response.json()
-    setJournals(data.results)
+    try {
+      const response = await fetch(url)
+      const data = await response.json()
+      setJournals(data.results)
+    } catch (error) {
+      console.error('Error fetching journals:', error)
+    }
   }
 
   useEffect(() => {
@@ -58,6 +62,7 @@ export default function Analytics() {
       }
     })
 
+    console.log('Generated URL:', `${baseUrl}?${params.toString()}`)
     return params.toString() ? `${baseUrl}?${params.toString()}` : baseUrl
   }
 
@@ -65,6 +70,7 @@ export default function Analytics() {
     setLoading(true)
     try {
       const url = generateSearchUrl()
+      console.log('Fetching filtered journals from:', url)
       const response = await fetch(url)
       const data = await response.json()
       setJournals(data.results)
@@ -87,8 +93,8 @@ export default function Analytics() {
       <Layout.Body>
         <div className="space-y-8">
           <AnalyticsHeader />
-          
-          <StatsCards 
+
+          <StatsCards
             stats={[
               {
                 title: "Total Journals",
@@ -114,12 +120,12 @@ export default function Analytics() {
                 icon: BarChart3,
                 trend: "+23.1%"
               }
-            ]} 
+            ]}
           />
 
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
             <div className="lg:col-span-4">
-              <AnalyticsFilters 
+              <AnalyticsFilters
                 filters={filters}
                 onCriteriaChange={handleCriteriaChange}
                 onSearch={fetchFilteredJournals}

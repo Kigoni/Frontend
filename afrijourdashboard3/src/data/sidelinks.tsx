@@ -71,7 +71,7 @@ export const sidelinks: SideLink[] = [
   //   icon: <IconApps size={18} />,
   // },
   {
-    title: 'Analytics',
+    title: 'Journal Filters',
     label: '',
     href: '/analytics',
     icon: <IconChartHistogram size={18} />,

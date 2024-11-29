@@ -9,7 +9,12 @@ import { JournalMetadata } from '@/components/JournalMetadata';
 import { VolumeList } from '@/components/VolumeList';
 
 interface Volume {
+  id: number;
   title: string;
+  volume_number: number;
+  issue_number: number;
+  year: number;
+  articles: any[];
 }
 
 interface Image {
